@@ -2799,12 +2799,32 @@ function buildPdfLink(url, pg, nome) {
   return `<button class="cad-sec-link" onclick="openPdf('${fullUrl}',${pg},'${n}')">↗ p.${pg}</button>`;
 }
 
-function openPdf(url, pg, nome) {
-  document.getElementById('pdf-modal-frame').src = url;
+function openPdf(viewerUrl, pg, nome) {
+  const PAGE_OFFSET = {1:8,2:8,3:8,4:8,5:6,6:8,7:8};
+  // extrai o caminho do PDF da URL do viewer (ex: pdfs/fme_vol_1.pdf)
+  const file = new URL(viewerUrl).searchParams.get('file');
+  const volMatch = file ? file.match(/fme_vol_(\d+)/) : null;
+  const vol = volMatch ? parseInt(volMatch[1]) : null;
+  const offset = (vol && PAGE_OFFSET[vol]) ? PAGE_OFFSET[vol] : 0;
+  const pdfPage = pg + offset;
+  // URL absoluta do PDF a partir da página atual
+  const base = location.href.replace(/\/[^\/]*$/, '/');
+  const pdfUrl = base + file;
+
   document.getElementById('pdf-modal-title').textContent = nome;
   document.getElementById('pdf-modal-pg').textContent = 'p. ' + pg + ' · FME Iezzi';
   document.getElementById('pdf-modal').style.display = 'block';
   document.body.style.overflow = 'hidden';
+  document.getElementById('pdf-modal-frame').src = '';
+
+  fetch(pdfUrl)
+    .then(r => { if(!r.ok) throw new Error('HTTP '+r.status); return r.blob(); })
+    .then(blob => {
+      document.getElementById('pdf-modal-frame').src = URL.createObjectURL(blob) + '#page=' + pdfPage;
+    })
+    .catch(() => {
+      document.getElementById('pdf-modal-frame').src = pdfUrl + '#page=' + pdfPage;
+    });
 }
 function closePdfModal() {
   document.getElementById('pdf-modal').style.display = 'none';
