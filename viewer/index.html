@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FME Viewer</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #1a1714; display: flex; flex-direction: column; height: 100vh; font-family: monospace; }
+  #toolbar {
+    background: #2a2420; border-bottom: 1px solid #3d3830;
+    padding: 6px 14px; display: flex; align-items: center; gap: 12px;
+    flex-shrink: 0;
+  }
+  #vol-info { color: #9a7515; font-size: .65rem; letter-spacing: .08em; text-transform: uppercase; flex: 1; }
+  #pg-info { color: #6b6258; font-size: .58rem; }
+  #close-btn {
+    font-size: .58rem; color: #9c9186; background: transparent;
+    border: 1px solid #3d3830; padding: 2px 8px; border-radius: 2px;
+    cursor: pointer; font-family: monospace;
+  }
+  #close-btn:hover { border-color: #9a7515; color: #9a7515; }
+  #viewer { flex: 1; border: none; width: 100%; }
+  #loading {
+    position: absolute; inset: 0; display: flex; align-items: center;
+    justify-content: center; background: #1a1714; color: #6b6258;
+    font-size: .65rem; letter-spacing: .1em; text-transform: uppercase;
+    pointer-events: none; transition: opacity .3s;
+  }
+</style>
+</head>
+<body>
+<div id="toolbar">
+  <div id="vol-info">FME Iezzi</div>
+  <div id="pg-info"></div>
+  <button id="close-btn" onclick="window.close()">✕ fechar</button>
+</div>
+<div id="loading">carregando pdf...</div>
+<iframe id="viewer" onload="onLoad()"></iframe>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const file   = params.get('file');   // ex: pdfs/fme_vol_1.pdf
+const page   = parseInt(params.get('page') || '1');
+const title  = params.get('title') || '';
+
+if (title) document.getElementById('vol-info').textContent = decodeURIComponent(title);
+document.getElementById('pg-info').textContent = `p. ${page}`;
+document.title = title ? decodeURIComponent(title) : 'FME Viewer';
+
+if (file) {
+  // PDF.js via CDN — abre na página exata
+  const pdfUrl = encodeURIComponent(location.origin + '/' + file);
+  const viewerUrl = `https://mozilla.github.io/pdf.js/web/viewer.html?file=${pdfUrl}#page=${page}`;
+  document.getElementById('viewer').src = viewerUrl;
+} else {
+  document.getElementById('loading').textContent = 'nenhum arquivo especificado';
+}
+
+function onLoad() {
+  document.getElementById('loading').style.opacity = '0';
+  setTimeout(() => document.getElementById('loading').style.display = 'none', 300);
+}
+</script>
+</body>
+</html>
