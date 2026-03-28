@@ -1,0 +1,2892 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Study OS — FUVEST 2027</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* LIGHT MONOCHROME PALETTE */
+  --bg:#f5f3ef;--bg2:#ffffff;--bg3:#f0ede8;--bg4:#e8e4dc;
+  --border:#ddd8ce;--border2:#ccc5b8;
+  --ink:#1a1714;--ink2:#3d3830;--ink3:#6b6258;--ink4:#9c9186;
+  --wood:#7a5c0f;--wood-l:#9a7515;--wood-pale:#b8900a;--wood-faint:rgba(122,92,15,.08);
+  /* accent tones — muted, monochromatic-friendly */
+  --mat:#2563eb;--fis:#c2410c;--qui:#6d28d9;--bio:#065f46;
+  --his:#92400e;--geo:#9d174d;--por:#065f46;--fil:#7c2d12;--ing:#374151;
+  --green:#166534;--amber:#92400e;--red:#991b1b;
+  --academia-c:#166534;--ifood-c:#c2410c;--thu:#4c1d95;
+  --water:#0c4a6e;--water-dark:#082f49;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'DM Mono',monospace;min-height:100vh;overflow-x:hidden;padding-bottom:56px}
+
+/* HEADER */
+.hdr{padding:20px 36px 16px;border-bottom:1px solid var(--border);display:flex;align-items:flex-end;justify-content:space-between;position:relative;flex-wrap:wrap;gap:12px;background:var(--bg2)}
+.hdr::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--wood) 0%,transparent 55%)}
+.logo h1{font-family:'DM Serif Display',serif;font-size:1.8rem;letter-spacing:-.02em;line-height:1;color:var(--ink)}
+.logo h1 em{color:var(--wood);font-style:italic}
+.logo-sub{display:flex;gap:16px;margin-top:5px;align-items:center;flex-wrap:wrap}
+.logo p{font-size:.55rem;color:var(--ink3);letter-spacing:.14em;text-transform:uppercase}
+.live-clock{font-family:'DM Serif Display',serif;font-size:.9rem;color:var(--wood);letter-spacing:.04em}
+.live-date{font-size:.55rem;color:var(--ink4);letter-spacing:.1em;text-transform:uppercase}
+.hstats{display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap}
+.hstat .v{font-family:'DM Serif Display',serif;font-size:1.4rem;color:var(--wood);display:block;line-height:1}
+.hstat .l{font-size:.52rem;color:var(--ink4);letter-spacing:.1em;text-transform:uppercase}
+.hdiv{width:1px;height:28px;background:var(--border)}
+.countdown-strip{background:var(--bg3);border-bottom:1px solid var(--border);padding:7px 36px;display:flex;gap:24px;align-items:center;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
+.cd-item{display:flex;flex-direction:column;align-items:center}
+.cd-val{font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--red);line-height:1;margin-bottom:1px}
+.cd-lbl{font-size:.48rem;color:var(--ink4)}
+.cd-sep{color:var(--border2);font-size:1rem}
+
+/* ══ CADERNO ══ */
+.cad-vol{background:var(--bg2);border:1px solid var(--border);border-radius:3px;overflow:hidden;margin-bottom:4px}
+.cad-vol-hdr{display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;background:var(--bg3);border-bottom:1px solid var(--border);user-select:none}
+.cad-vol-hdr:hover{background:var(--bg4)}
+.cad-vol-num{font-family:'DM Serif Display',serif;font-size:1.4rem;color:var(--wood);line-height:1;min-width:24px}
+.cad-vol-title{flex:1}
+.cad-vol-name{font-size:.75rem;font-weight:600;color:var(--ink);letter-spacing:.02em}
+.cad-vol-sub{font-size:.55rem;color:var(--ink4);letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+.cad-vol-prog{display:flex;flex-direction:column;align-items:flex-end;gap:3px;min-width:100px}
+.cad-vol-pct{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--wood)}
+.cad-vol-bar{width:80px;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.cad-vol-fill{height:100%;background:var(--wood);border-radius:2px;transition:width .3s}
+.cad-vol-body{display:none;padding:0}
+.cad-vol-body.open{display:block}
+.cad-cap{border-bottom:1px solid var(--border)}
+.cad-cap-hdr{display:flex;align-items:center;gap:10px;padding:9px 16px 9px 24px;cursor:pointer;background:var(--bg2);border-left:3px solid var(--mat)}
+.cad-cap-hdr:hover{background:var(--bg3)}
+.cad-cap-name{font-size:.65rem;font-weight:600;color:var(--ink2);flex:1;letter-spacing:.02em}
+.cad-cap-meta{font-size:.52rem;color:var(--ink4);letter-spacing:.06em}
+.cad-cap-body{display:none;background:var(--bg3);padding:4px 0}
+.cad-cap-body.open{display:block}
+.cad-sec{display:flex;align-items:center;gap:10px;padding:7px 16px 7px 36px;border-bottom:1px solid var(--border);transition:background .13s}
+.cad-sec:last-child{border-bottom:none}
+.cad-sec:hover{background:var(--bg4)}
+.cad-sec-name{flex:1;font-size:.6rem;color:var(--ink2);line-height:1.4}
+.cad-sec-pg{font-size:.52rem;color:var(--ink4);letter-spacing:.05em;white-space:nowrap}
+.cad-sec-link{font-size:.5rem;color:var(--wood);text-decoration:none;border:1px solid var(--border);padding:1px 5px;border-radius:1px;white-space:nowrap;transition:all .13s}
+.cad-sec-link:hover{background:var(--wood-faint);border-color:var(--wood)}
+.cad-chk{width:15px;height:15px;border:1.5px solid var(--border2);border-radius:2px;background:var(--bg4);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .13s;font-size:.6rem;color:transparent}
+.cad-chk.done{background:var(--green);border-color:var(--green);color:#fff}
+.cad-score-btn{font-size:.48rem;color:var(--wood);cursor:pointer;letter-spacing:.05em;padding:1px 5px;border:1px solid var(--border);border-radius:1px;background:transparent;font-family:'DM Mono',monospace;white-space:nowrap}
+.cad-score-btn:hover{background:var(--wood-faint)}
+.cad-score-val{font-size:.52rem;min-width:28px;text-align:center}
+.cad-ex-badge{font-size:.48rem;background:rgba(37,99,235,.08);color:var(--mat);border:1px solid rgba(37,99,235,.2);padding:1px 5px;border-radius:1px;white-space:nowrap}
+.cad-stat-card{background:var(--bg2);border:1px solid var(--border);padding:12px 14px;border-radius:2px}
+.cad-stat-v{font-family:'DM Serif Display',serif;font-size:1.5rem;color:var(--wood);line-height:1}
+.cad-stat-l{font-size:.52rem;color:var(--ink4);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+/* NAV */
+.nav{padding:0 36px;border-bottom:1px solid var(--border);display:flex;gap:0;overflow-x:auto;background:var(--bg2)}
+.nav::-webkit-scrollbar{height:0}
+.ntab{padding:12px 16px;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink4);cursor:pointer;border-bottom:2px solid transparent;transition:all .18s;position:relative;top:1px;white-space:nowrap;user-select:none}
+.ntab:hover{color:var(--ink2)}
+.ntab.on{color:var(--wood);border-bottom-color:var(--wood)}
+
+/* VIEWS */
+.view{display:none;padding:24px 36px;flex-direction:column;gap:18px;animation:fi .25s ease both}
+
+.view.on{display:flex}
+@keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+/* BANNER */
+.banner{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--wood);padding:10px 16px;font-size:.63rem;color:var(--ink3);letter-spacing:.03em;line-height:1.6}
+.banner strong{color:var(--wood)}
+
+/* ══════════════════════════════════════════
+   WEEK GRID — shared subgrid row alignment
+   The outer .wgrid uses CSS subgrid so every
+   row height is shared across all day columns.
+   Each .dcol uses grid-row: span N for blocks
+   that span multiple time slots.
+══════════════════════════════════════════ */
+.wgrid{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  /* 12 rows: header + 11 time slots */
+  grid-template-rows: auto repeat(11,auto);
+  gap:0;
+  border:1px solid var(--border);
+  border-radius:3px;
+  overflow:hidden;
+  /* Enable subgrid on rows */
+  align-items:stretch;
+}
+@media(max-width:1400px){.wgrid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:900px){.wgrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.wgrid{grid-template-columns:1fr}}
+
+/* DAY — each column spans all 12 rows as a subgrid */
+.dcol{
+  display:grid;
+  grid-template-rows:subgrid;
+  grid-row: span 12;
+  background:var(--bg2);
+  border-right:1px solid var(--border);
+  border-top:3px solid transparent;
+}
+.dcol:last-child{border-right:none}
+.dhead{padding:10px 10px 8px;border-bottom:1px solid var(--border);grid-row:1;display:flex;flex-direction:column;gap:4px;background:var(--bg3)}
+.dname{font-family:'DM Serif Display',serif;font-size:.9rem;color:var(--ink)}
+.dtags{display:flex;flex-wrap:wrap;gap:3px}
+.dtag{font-size:.48rem;letter-spacing:.09em;text-transform:uppercase;padding:2px 5px;border-radius:1px;font-weight:600}
+/* blocks are direct children of .dcol, each gets its slot row */
+.blk{padding:8px 10px;position:relative;overflow:hidden;border-bottom:1px solid var(--border);border-left:3px solid transparent;transition:background .15s}
+.btime{font-size:.49rem;letter-spacing:.07em;color:var(--ink4);margin-bottom:2px;text-transform:uppercase;display:flex;align-items:center;gap:4px}
+.blabel{font-size:.63rem;font-weight:600;margin-bottom:2px;line-height:1.3;color:var(--ink2)}
+.bdesc{font-size:.56rem;color:var(--ink3);line-height:1.5}
+
+/* block accent colors — left border + very subtle bg tint */
+.b-est1{border-left-color:var(--mat);background:#f0f6ff}
+.b-est2{border-left-color:#93c5fd;background:#f8faff}
+.b-academia{border-left-color:var(--academia-c);background:#f0fdf4}
+.b-ifood{border-left-color:var(--ifood-c);background:#fff7f5}
+.b-rev{border-left-color:var(--wood);background:#fefce8}
+.b-thu{border-left-color:var(--thu);background:#f5f3ff}
+.b-rest{border-left-color:var(--border2);background:var(--bg3)}
+.b-food{border-left-color:var(--amber);background:#fffbeb}
+.b-sleep{border-left-color:var(--ink4);background:var(--bg3)}
+
+/* FLAG */
+.flag-row{display:flex;align-items:center;gap:6px;margin-top:5px;padding-top:5px;border-top:1px solid var(--border)}
+.flag-btn{width:17px;height:17px;border:1.5px solid var(--border2);border-radius:3px;background:var(--bg4);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .13s;font-size:.65rem;color:transparent}
+.flag-btn.done{background:var(--green);border-color:var(--green);color:#fff}
+.flag-btn.skip{background:var(--amber);border-color:var(--amber);color:#fff}
+.flag-label{font-size:.52rem;color:var(--ink4);letter-spacing:.05em;flex:1}
+.obs-btn{font-size:.49rem;color:var(--wood);cursor:pointer;letter-spacing:.05em;padding:1px 5px;border:1px solid var(--border);border-radius:1px;transition:all .13s;background:transparent;font-family:'DM Mono',monospace}
+.obs-btn:hover{background:var(--wood-faint);border-color:var(--wood)}
+.obs-area{display:none;margin-top:4px}
+.obs-area.open{display:block}
+.obs-area textarea{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--ink2);font-family:'DM Mono',monospace;font-size:.57rem;padding:6px 8px;resize:vertical;min-height:48px;line-height:1.5;outline:none;border-radius:1px}
+.obs-area textarea:focus{border-color:var(--wood)}
+.obs-area textarea::placeholder{color:var(--ink4)}
+
+/* THURSDAY */
+.thu-special{border-top-color:var(--thu)!important}
+.thu-badge{background:rgba(76,29,149,.1);color:var(--thu);border:1px solid rgba(76,29,149,.2)}
+
+/* HOJE HIGHLIGHT */
+.dcol.today{border-top-color:var(--wood)!important;background:var(--bg2)}
+.dcol.today .dhead{background:#fdf8ee}
+.dcol.today .dname{color:var(--wood)}
+.today-badge{font-size:.48rem;letter-spacing:.12em;text-transform:uppercase;color:#fff;background:var(--wood);padding:1px 6px;border-radius:1px;font-weight:700;margin-left:4px;vertical-align:middle}
+
+/* BLOCO ATUAL */
+.blk.now-block{background:#fefce8!important;border-left-color:var(--wood)!important;border-left-width:4px!important}
+.blk.now-block .btime{color:var(--wood)!important}
+.blk.now-block .blabel{color:var(--wood)!important}
+.now-pulse{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--wood);animation:npulse 1.4s infinite;flex-shrink:0}
+@keyframes npulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.6)}}
+
+/* ─── HYDRATION HUD ─── */
+.hydra-hud{background:var(--bg2);border:1px solid var(--border);border-radius:2px;padding:18px 20px;display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.water-bottle{position:relative;width:52px;height:110px;flex-shrink:0}
+.bottle-svg{width:100%;height:100%}
+.hydra-info{flex:1;min-width:180px}
+.hydra-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--water);margin-bottom:4px}
+.hydra-amount{font-family:'DM Serif Display',serif;font-size:2.2rem;color:var(--ink);line-height:1;margin-bottom:2px}
+.hydra-amount span{font-size:1rem;color:var(--ink3)}
+.hydra-goal{font-size:.6rem;color:var(--ink3);letter-spacing:.08em;margin-bottom:12px}
+.hydra-bar-wrap{height:5px;background:var(--bg4);border-radius:3px;overflow:hidden;margin-bottom:10px}
+.hydra-bar{height:100%;background:linear-gradient(90deg,var(--water-dark),var(--water));border-radius:3px;transition:width .5s cubic-bezier(.34,1.56,.64,1)}
+.hydra-btns{display:flex;gap:6px;flex-wrap:wrap}
+.hbtn{padding:6px 12px;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.09em;border:1px solid var(--water);background:rgba(12,74,110,.06);color:var(--water);cursor:pointer;transition:all .15s;border-radius:2px}
+.hbtn:hover{background:rgba(12,74,110,.12)}
+.hbtn.reset-w{border-color:var(--border2);background:var(--bg4);color:var(--ink4)}
+.hbtn.reset-w:hover{border-color:var(--red);color:var(--red)}
+.hydra-cups{display:flex;gap:5px;flex-wrap:wrap;margin-top:10px}
+.cup{width:14px;height:14px;border-radius:2px;border:1px solid var(--border2);background:var(--bg4);transition:all .2s}
+.cup.filled{background:var(--water);border-color:var(--water)}
+.wave-effect{animation:wave .4s ease}
+@keyframes wave{0%{transform:scale(1)}50%{transform:scale(1.02)}100%{transform:scale(1)}}
+
+/* TREINO */
+.treino-month{background:var(--bg2);border:1px solid var(--border);border-radius:2px;overflow:hidden;margin-bottom:2px}
+.tm-hdr{padding:13px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;transition:background .15s}
+.tm-hdr:hover{background:var(--bg3)}
+.tm-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.tm-title{font-family:'DM Serif Display',serif;font-size:1.05rem;flex:1;color:var(--ink)}
+.tm-meta{font-size:.57rem;color:var(--ink3);letter-spacing:.08em}
+.tm-body{padding:14px 16px;display:none;flex-direction:column;gap:14px}
+.tm-body.op{display:flex}
+.treino-dias{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.treino-dia{background:var(--bg3);border:1px solid var(--border);border-radius:2px;padding:12px 14px}
+.td-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding-bottom:7px;border-bottom:1px solid var(--border)}
+.td-day{font-family:'DM Serif Display',serif;font-size:.9rem;color:var(--ink)}
+.td-focus{font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border-radius:1px}
+.exercicios{display:flex;flex-direction:column;gap:5px}
+.ex-item{display:flex;align-items:baseline;gap:8px;padding:5px 0;border-bottom:1px solid var(--border)}
+.ex-item:last-child{border-bottom:none}
+.ex-num{font-size:.58rem;color:var(--ink4);width:14px;flex-shrink:0}
+.ex-name{font-size:.65rem;color:var(--ink2);flex:1}
+.ex-sets{font-size:.6rem;color:var(--wood);white-space:nowrap;font-weight:600}
+.ex-note{font-size:.55rem;color:var(--ink3);font-style:italic}
+.prog-note{background:var(--bg4);border:1px solid var(--border);border-left:2px solid var(--green);padding:8px 12px;font-size:.62rem;color:var(--ink2);line-height:1.6}
+
+/* DIETA */
+.macro-bar-section{background:var(--bg2);border:1px solid var(--border);border-radius:2px;padding:16px 18px}
+.macro-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.macro-label{font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;width:80px;flex-shrink:0;color:var(--ink3)}
+.macro-track{flex:1;height:4px;background:var(--bg4);border-radius:3px;overflow:hidden}
+.macro-fill{height:100%;border-radius:3px}
+.macro-val{font-size:.62rem;color:var(--ink2);white-space:nowrap;width:80px;text-align:right}
+.meals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+.meal-card{background:var(--bg3);border:1px solid var(--border);padding:11px 13px;border-radius:2px}
+.mc-time{font-size:.52rem;letter-spacing:.11em;text-transform:uppercase;color:var(--ink4);margin-bottom:3px}
+.mc-name{font-size:.68rem;font-weight:600;color:var(--ink);margin-bottom:4px}
+.mc-items{font-size:.6rem;color:var(--ink2);line-height:1.6}
+.mc-kcal{font-size:.55rem;color:var(--ink4);margin-top:5px;padding-top:5px;border-top:1px solid var(--border)}
+.ing-section{background:var(--bg2);border:1px solid var(--border);border-radius:2px;padding:14px 16px}
+.ing-title{font-size:.57rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink4);margin-bottom:8px}
+.ing-chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{font-size:.6rem;padding:3px 9px;border:1px solid var(--border);color:var(--ink3);border-radius:1px;cursor:pointer;transition:all .13s}
+.chip:hover{border-color:var(--red);color:var(--red)}
+.chip.protein{border-color:rgba(6,95,70,.3);color:var(--bio)}
+.chip.carb{border-color:rgba(146,64,14,.3);color:var(--his)}
+.chip.fat{border-color:rgba(124,45,18,.3);color:var(--fil)}
+.chip.veg{border-color:rgba(6,95,70,.25);color:var(--por)}
+
+/* MATERIAS */
+.mat-section{background:var(--bg2);border:1px solid var(--border);border-radius:2px;overflow:hidden}
+.mat-hdr{padding:13px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;transition:background .15s}
+.mat-hdr:hover{background:var(--bg3)}
+.mat-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.mat-title{font-family:'DM Serif Display',serif;font-size:1rem;flex:1}
+.mat-freq{font-size:.57rem;color:var(--ink3);letter-spacing:.07em}
+.mat-q{font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--wood)}
+.mat-body{padding:13px 16px;display:none}
+.mat-body.op{display:block}
+.topics-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:5px}
+.topic{display:flex;align-items:center;gap:7px;padding:6px 9px;background:var(--bg3);border:1px solid var(--border);border-radius:2px;font-size:.6rem}
+.tbar{height:2px;background:var(--border2);border-radius:1px;flex:1;position:relative;overflow:hidden}
+.tbar-f{position:absolute;left:0;top:0;bottom:0;border-radius:1px}
+.tfreq{font-size:.57rem;color:var(--ink4);white-space:nowrap}
+
+/* PROG BARS */
+.prog-area{background:var(--bg2);border:1px solid var(--border);padding:13px 16px;border-radius:2px}
+.prog-lbl{font-size:.57rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);display:flex;justify-content:space-between;margin-bottom:8px}
+.prog-rows{display:flex;flex-direction:column;gap:6px}
+.prog-row{display:flex;align-items:center;gap:10px}
+.prog-name{font-size:.57rem;color:var(--ink3);width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.04em}
+.prog-track{flex:1;height:3px;background:var(--bg4);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;border-radius:2px;transition:width 1.2s ease}
+.prog-pct{font-size:.55rem;color:var(--ink4);width:24px;text-align:right}
+
+/* DIARY */
+.diary-section{background:var(--bg2);border:1px solid var(--border);border-radius:2px;overflow:hidden}
+.diary-hdr{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;transition:background .15s}
+.diary-hdr:hover{background:var(--bg3)}
+.diary-title{font-family:'DM Serif Display',serif;font-size:1rem;flex:1;color:var(--ink)}
+.diary-meta{font-size:.57rem;color:var(--ink4);letter-spacing:.09em;text-transform:uppercase}
+.diary-body{padding:16px;display:none;flex-direction:column;gap:14px}
+.diary-body.op{display:flex}
+.obs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:7px}
+.obs-card{background:var(--bg3);border:1px solid var(--border);padding:9px 11px;border-radius:2px}
+.obs-card-day{font-size:.53rem;letter-spacing:.11em;text-transform:uppercase;color:var(--ink4);margin-bottom:3px}
+.obs-card-blk{font-size:.6rem;color:var(--wood);margin-bottom:4px}
+.obs-card-text{font-size:.6rem;color:var(--ink2);line-height:1.5;font-style:italic;min-height:28px}
+.obs-card-text.empty{color:var(--ink4)}
+.compile-area{background:var(--bg3);border:1px solid var(--border);border-radius:2px;padding:12px 14px}
+.compile-label{font-size:.57rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink4);margin-bottom:7px}
+.compile-out{font-size:.63rem;color:var(--ink2);line-height:1.7;white-space:pre-wrap;min-height:50px}
+.compile-out.empty{color:var(--ink4);font-style:italic}
+.compile-btns{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}
+.cbtn{padding:7px 14px;font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.09em;text-transform:uppercase;border:1px solid var(--border2);background:var(--bg4);color:var(--ink2);cursor:pointer;transition:all .15s;border-radius:2px}
+.cbtn:hover{border-color:var(--wood);color:var(--wood);background:var(--bg3)}
+.cbtn.primary{background:var(--thu);border-color:var(--thu);color:#fff}
+.cbtn.primary:hover{background:#3b0764}
+.sr-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.sr-label{font-size:.57rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px;color:var(--ink3)}
+.sr-ta{width:100%;background:var(--bg4);border:1px solid var(--border);color:var(--ink2);font-family:'DM Mono',monospace;font-size:.6rem;padding:7px 9px;resize:vertical;min-height:72px;line-height:1.5;outline:none;border-radius:1px}
+.sr-ta:focus{border-color:var(--wood)}
+.sr-ta::placeholder{color:var(--ink4)}
+
+/* FASES */
+.timeline{padding-left:32px;position:relative}
+.timeline::before{content:'';position:absolute;left:9px;top:4px;bottom:4px;width:1px;background:linear-gradient(180deg,var(--wood) 0%,var(--border) 75%,transparent 100%)}
+.fase{position:relative;padding:16px 0 22px;padding-left:22px}
+.fase-dot{position:absolute;left:-28px;top:20px;width:10px;height:10px;border-radius:50%;border:2px solid var(--bg)}
+.fase-meta{font-size:.54rem;letter-spacing:.13em;text-transform:uppercase;color:var(--ink4);margin-bottom:2px}
+.fase-title{font-family:'DM Serif Display',serif;font-size:1.1rem;margin-bottom:4px;color:var(--ink)}
+.fase-desc{font-size:.62rem;color:var(--ink3);line-height:1.7;max-width:540px}
+.fase-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:7px}
+.fase-tag{font-size:.53rem;padding:2px 7px;border:1px solid var(--border2);color:var(--ink3);letter-spacing:.07em;text-transform:uppercase}
+
+/* CRONÔMETRO */
+.clock-wrap{text-align:center;padding:36px 20px;max-width:480px;margin:0 auto}
+.clock-sess-lbl{font-size:.57rem;letter-spacing:.17em;text-transform:uppercase;color:var(--ink4);margin-bottom:16px}
+.clock-disp{font-family:'DM Serif Display',serif;font-size:6rem;color:var(--ink);line-height:1;letter-spacing:-.03em;margin-bottom:7px;font-variant-numeric:tabular-nums}
+.clock-disp .sep{color:var(--wood)}
+.clock-phase{font-size:.6rem;letter-spacing:.11em;text-transform:uppercase;color:var(--wood);margin-bottom:28px}
+.clock-ctrls{display:flex;gap:9px;justify-content:center;margin-bottom:24px;flex-wrap:wrap}
+.btn{padding:8px 18px;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.09em;text-transform:uppercase;border:1px solid var(--border2);background:var(--bg3);color:var(--ink2);cursor:pointer;transition:all .14s;border-radius:2px}
+.btn:hover{border-color:var(--wood);color:var(--wood)}
+.btn.pri{background:var(--wood);border-color:var(--wood);color:#fff}
+.btn.pri:hover{background:var(--wood-l)}
+.sess-sel{display:flex;gap:5px;justify-content:center;flex-wrap:wrap}
+.sbtn{padding:5px 11px;font-size:.57rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--border);background:transparent;color:var(--ink4);cursor:pointer;transition:all .14s;border-radius:2px;font-family:'DM Mono',monospace}
+.sbtn.on,.sbtn:hover{border-color:var(--wood);color:var(--wood);background:var(--wood-faint)}
+
+/* BOTTOM BAR */
+.bbar{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);padding:7px 36px;display:flex;align-items:center;gap:18px;font-size:.55rem;letter-spacing:.09em;text-transform:uppercase;color:var(--ink4);z-index:100;flex-wrap:wrap}
+.bbar .sep{color:var(--border2)}
+.bbar .live{margin-left:auto;display:flex;align-items:center;gap:6px;color:var(--ink3)}
+.bdot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* color tag helpers — light-mode muted tones */
+.c-mat{background:rgba(37,99,235,.1);color:var(--mat)}
+.c-fis{background:rgba(194,65,12,.1);color:var(--fis)}
+.c-qui{background:rgba(109,40,217,.1);color:var(--qui)}
+.c-bio{background:rgba(6,95,70,.1);color:var(--bio)}
+.c-his{background:rgba(146,64,14,.1);color:var(--his)}
+.c-geo{background:rgba(157,23,77,.1);color:var(--geo)}
+.c-por{background:rgba(6,95,70,.08);color:var(--por)}
+.c-fil{background:rgba(124,45,18,.1);color:var(--fil)}
+.c-thu{background:rgba(76,29,149,.1);color:var(--thu)}
+.c-wood{background:rgba(122,92,15,.1);color:var(--wood)}
+.c-water{background:rgba(12,74,110,.1);color:var(--water)}
+
+/* ══ CONTEÚDO ══ */
+.cont-subject{background:var(--bg2);border:1px solid var(--border);border-radius:2px;overflow:hidden;margin-bottom:3px}
+.cont-hdr{padding:13px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;transition:background .15s}
+.cont-hdr:hover{background:var(--bg3)}
+.cont-hdr-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.cont-hdr-name{font-family:'DM Serif Display',serif;font-size:1rem;flex:1;color:var(--ink)}
+.cont-hdr-meta{font-size:.56rem;color:var(--ink4);letter-spacing:.08em}
+.cont-hdr-q{font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--wood)}
+.cont-body{display:none;padding:16px}
+.cont-body.op{display:block}
+.cont-phase-title{font-size:.54rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink4);margin:0 0 8px;padding-bottom:5px;border-bottom:1px solid var(--border)}
+.cont-phase-title:not(:first-child){margin-top:18px}
+.cont-topics{display:flex;flex-direction:column;gap:0}
+.ct{display:grid;grid-template-columns:24px 1fr auto auto;align-items:start;gap:6px;padding:7px 0;border-bottom:1px dashed var(--border)}
+.ct:last-child{border-bottom:none}
+.ct-num{font-size:.56rem;color:var(--ink4);padding-top:1px}
+.ct-info{display:flex;flex-direction:column;gap:2px}
+.ct-name{font-size:.67rem;color:var(--ink);font-weight:500;line-height:1.3}
+.ct-detail{font-size:.58rem;color:var(--ink3);line-height:1.4}
+.ct-freq{font-size:.54rem;padding:1px 7px;border-radius:1px;white-space:nowrap;font-weight:600;letter-spacing:.06em;align-self:start;margin-top:1px}
+.ct-freq.f-must{background:rgba(22,101,52,.1);color:var(--green);border:1px solid rgba(22,101,52,.2)}
+.ct-freq.f-high{background:rgba(146,64,14,.1);color:var(--amber);border:1px solid rgba(146,64,14,.2)}
+.ct-freq.f-med{background:rgba(55,65,81,.08);color:var(--ink3);border:1px solid var(--border)}
+.ct-done{width:16px;height:16px;border:1.5px solid var(--border2);border-radius:3px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.6rem;transition:all .13s;background:var(--bg4);align-self:start;margin-top:1px;color:transparent}
+.ct-done.checked{background:var(--green);border-color:var(--green);color:#fff}
+.cont-progress{margin-top:10px;background:var(--bg4);height:4px;border-radius:2px;overflow:hidden}
+.cont-progress-fill{height:100%;background:var(--green);border-radius:2px;transition:width .4s ease}
+.cont-progress-label{font-size:.54rem;color:var(--ink4);margin-bottom:4px;display:flex;justify-content:space-between}
+
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+</style>
+</head>
+<body>
+<!-- LOCK SCREEN -->
+<div id="lock-screen" style="position:fixed;inset:0;z-index:99999;background:#1a1714;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px">
+  <div style="font-family:'DM Serif Display',serif;font-size:2rem;color:#7a5c0f;letter-spacing:-.02em">Study <em style="font-style:italic">OS</em></div>
+  <div style="font-size:.55rem;color:#6b6258;letter-spacing:.14em;text-transform:uppercase;margin-top:-8px">FUVEST 2027</div>
+  <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px">
+    <input id="lock-input" type="password" placeholder="senha"
+      style="background:#2a2420;border:1px solid #3d3830;color:#f5f3ef;font-family:'DM Mono',monospace;font-size:.75rem;padding:10px 14px;border-radius:2px;outline:none;width:220px;letter-spacing:.1em;text-align:center"
+      onkeydown="if(event.key==='Enter')checkLock()"
+      oninput="document.getElementById('lock-err').style.opacity='0'"
+    />
+    <div id="lock-err" style="font-size:.52rem;color:#991b1b;text-align:center;opacity:0;transition:opacity .2s;letter-spacing:.05em">senha incorreta</div>
+    <button onclick="checkLock()"
+      style="background:#7a5c0f;color:#f5f3ef;border:none;font-family:'DM Mono',monospace;font-size:.6rem;padding:8px;border-radius:2px;cursor:pointer;letter-spacing:.1em;text-transform:uppercase"
+    >entrar</button>
+  </div>
+  <div style="font-size:.48rem;color:#3d3830;letter-spacing:.08em;margin-top:8px">IME-USP · ETH Zurich · 木</div>
+</div>
+<script>
+var SENHA = 'fuvest2027';
+function checkLock() {
+  var val = document.getElementById('lock-input').value;
+  if (val === SENHA) {
+    document.getElementById('lock-screen').style.display = 'none';
+    try { sessionStorage.setItem('studyos_auth','1'); } catch(e){}
+  } else {
+    document.getElementById('lock-err').style.opacity = '1';
+    document.getElementById('lock-input').value = '';
+    document.getElementById('lock-input').focus();
+  }
+}
+try {
+  if (sessionStorage.getItem('studyos_auth') === '1') {
+    document.getElementById('lock-screen').style.display = 'none';
+  }
+} catch(e){}
+document.addEventListener('DOMContentLoaded', function() {
+  var inp = document.getElementById('lock-input');
+  if (inp) inp.focus();
+});
+</script>
+
+
+
+<header class="hdr">
+  <div class="logo">
+    <h1>Study <em>OS</em></h1>
+    <div class="logo-sub">
+      <p>FUVEST 2027 · IME-USP · Carreira 313 · PPI · Meta 80%</p>
+      <span class="live-clock" id="live-clock">--:--:--</span>
+      <span class="live-date" id="live-date">--</span>
+    </div>
+  </div>
+  <div class="hstats">
+    <div class="hstat"><span class="v" id="days-left">—</span><span class="l">dias p/ prova</span></div>
+    <div class="hdiv"></div>
+    <div class="hstat"><span class="v" id="weeks-left">—</span><span class="l">semanas</span></div>
+    <div class="hdiv"></div>
+    <div class="hstat"><span class="v">7</span><span class="l">dias/semana</span></div>
+    <div class="hdiv"></div>
+    <div class="hstat"><span class="v">80%</span><span class="l">benchmark</span></div>
+  </div>
+</header>
+
+<div class="countdown-strip">
+  <span style="color:var(--text-dim);letter-spacing:.1em">FUVEST 22/11/2026</span>
+  <span class="cd-sep">·</span>
+  <div class="cd-item"><span class="cd-val" id="cd-d">—</span><span class="cd-lbl">DIAS</span></div>
+  <span class="cd-sep">:</span>
+  <div class="cd-item"><span class="cd-val" id="cd-h">—</span><span class="cd-lbl">HORAS</span></div>
+  <span class="cd-sep">:</span>
+  <div class="cd-item"><span class="cd-val" id="cd-m">—</span><span class="cd-lbl">MIN</span></div>
+  <span class="cd-sep">:</span>
+  <div class="cd-item"><span class="cd-val" id="cd-s">—</span><span class="cd-lbl">SEG</span></div>
+  <span class="cd-sep" style="margin-left:8px">·</span>
+  <div id="water-mini" style="display:flex;align-items:center;gap:8px;margin-left:4px">
+    <span style="color:var(--water);font-size:.7rem">💧</span>
+    <span id="water-mini-val" style="font-family:'DM Serif Display',serif;font-size:.9rem;color:var(--water)">0</span>
+    <span style="color:var(--text-faint)">/3000 ml</span>
+  </div>
+</div>
+
+<nav class="nav">
+  <div class="ntab on" onclick="tab('semana',this)">⬜ Semana</div>
+  <div class="ntab" onclick="tab('caderno',this)">📒 Caderno</div>
+  <div class="ntab" onclick="tab('conteudo',this)">📋 Conteúdo</div>
+  <div class="ntab" onclick="tab('materias',this)">◈ Matérias</div>
+  <div class="ntab" onclick="tab('treino',this)">⚡ Treino</div>
+  <div class="ntab" onclick="tab('dieta',this)">⬡ Alimentação</div>
+  <div class="ntab" onclick="tab('quinta',this)">◎ Diário Quinta</div>
+  <div class="ntab" onclick="tab('fases',this)">▷ Fases</div>
+  <div class="ntab" onclick="tab('crono',this)">⏱ Cronômetro</div>
+</nav>
+
+<!-- ══════════ SEMANA ══════════ -->
+<div class="view on" id="v-semana">
+  <div class="banner">
+    <strong>Rotina real:</strong> Academia 07h–08h (Seg/Ter/Qua/Sex/Sáb) · Bloco 1 09h15 = conteúdo + Iezzi · Bloco 2 11h30 = questões FUVEST ·
+    iFood saída 18h30, volta 23h30–00h · <strong>Quinta = folga total</strong> (sem academia, sem iFood) — vídeo-aulas, reflexão, Diário
+  </div>
+
+  <!-- HYDRATION HUD inline -->
+  <div class="hydra-hud">
+    <div class="water-bottle">
+      <svg class="bottle-svg" viewBox="0 0 52 110" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <clipPath id="bottleClip">
+            <path d="M14,18 L10,28 L8,38 L8,95 Q8,102 15,102 L37,102 Q44,102 44,95 L44,38 L42,28 L38,18 Z"/>
+          </clipPath>
+          <linearGradient id="wg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#38bdf8" stop-opacity=".9"/>
+            <stop offset="100%" stop-color="#0284c7" stop-opacity=".95"/>
+          </linearGradient>
+        </defs>
+        <!-- bottle outline -->
+        <path d="M14,18 L10,28 L8,38 L8,95 Q8,102 15,102 L37,102 Q44,102 44,95 L44,38 L42,28 L38,18 Z" fill="none" stroke="#353028" stroke-width="1.5"/>
+        <!-- cap -->
+        <rect x="18" y="8" width="16" height="12" rx="2" fill="#353028"/>
+        <!-- water fill -->
+        <rect id="water-fill-rect" x="8" y="38" width="36" height="0" clip-path="url(#bottleClip)" fill="url(#wg)" opacity=".85"/>
+        <!-- wave shimmer -->
+        <rect id="water-wave" x="8" y="38" width="36" height="4" clip-path="url(#bottleClip)" fill="rgba(255,255,255,.15)" opacity="0"/>
+        <!-- percentage text -->
+        <text id="bottle-pct" x="26" y="75" text-anchor="middle" fill="#e0f2fe" font-family="'DM Mono', monospace" font-size="9" font-weight="500">0%</text>
+      </svg>
+    </div>
+    <div class="hydra-info">
+      <div class="hydra-title">Hidratação</div>
+      <div class="hydra-amount"><span id="water-ml">0</span> <span>ml</span></div>
+      <div class="hydra-goal">Meta: 3.000 ml/dia · ~8–10 copos · academia+entrega exige mais</div>
+      <div class="hydra-bar-wrap">
+        <div class="hydra-bar" id="hydra-bar" style="width:0%"></div>
+      </div>
+      <div class="hydra-cups" id="hydra-cups"></div>
+      <div style="height:8px"></div>
+      <div class="hydra-btns">
+        <button class="hbtn" onclick="addWater(200)">+200 ml</button>
+        <button class="hbtn" onclick="addWater(300)">+300 ml</button>
+        <button class="hbtn" onclick="addWater(400)">+400 ml</button>
+        <button class="hbtn" onclick="addWater(500)">+500 ml</button>
+        <button class="hbtn reset-w" onclick="resetWater()">↺ Zerar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="wgrid" id="week-grid"></div>
+</div>
+
+<!-- ══════════ MATERIAS ══════════ -->
+<div class="view" id="v-materias">
+  <div class="prog-area">
+    <div class="prog-lbl"><span>Progresso estimado por matéria</span><span style="color:var(--wood-pale)">baseado em frequência histórica</span></div>
+    <div class="prog-rows" id="prog-rows"></div>
+  </div>
+  <div id="mat-list"></div>
+</div>
+
+<!-- ══════════ TREINO ══════════ -->
+<div class="view" id="v-treino">
+  <div class="banner" style="border-left-color:var(--academia-c)">
+    <strong>Plano 3 meses — Recomposição Corporal:</strong> 1,75m · 70kg · falso magro (gordura abdominal, massa magra baixa nos membros) · 2.500–2.600 kcal/dia · 1h/dia · 5x/semana (Seg/Ter/Qua/Sex/Sáb) ·
+    Objetivo: ganho de massa nos braços e pernas, redução abdominal simultânea via déficit proteico-calórico controlado
+  </div>
+  <div id="treino-list"></div>
+</div>
+
+<!-- ══════════ DIETA ══════════ -->
+<div class="view" id="v-dieta">
+  <div class="banner" style="border-left-color:var(--his)">
+    <strong>2.500 kcal/dia — Recomposição:</strong> ~170–180g proteína · ~250–270g carboidrato · ~70–80g gordura · base nos alimentos disponíveis em casa · maçã como fruta semanal (dura 1–2 semanas, preço ok)
+  </div>
+
+  <div class="macro-bar-section">
+    <div style="font-family:'DM Serif Display',serif;font-size:1rem;margin-bottom:12px;color:var(--cream)">Macros Diários</div>
+    <div class="macro-row">
+      <span class="macro-label" style="color:var(--bio)">Proteína</span>
+      <div class="macro-track"><div class="macro-fill" style="width:100%;background:var(--bio)"></div></div>
+      <span class="macro-val">175g · 700 kcal</span>
+    </div>
+    <div class="macro-row">
+      <span class="macro-label" style="color:var(--his)">Carboidrato</span>
+      <div class="macro-track"><div class="macro-fill" style="width:90%;background:var(--his)"></div></div>
+      <span class="macro-val">260g · 1.040 kcal</span>
+    </div>
+    <div class="macro-row">
+      <span class="macro-label" style="color:var(--fil)">Gordura</span>
+      <div class="macro-track"><div class="macro-fill" style="width:55%;background:var(--fil)"></div></div>
+      <span class="macro-val">75g · 675 kcal</span>
+    </div>
+    <div class="macro-row">
+      <span class="macro-label" style="color:var(--wood-pale)">Total</span>
+      <div class="macro-track"><div class="macro-fill" style="width:96%;background:var(--wood)"></div></div>
+      <span class="macro-val" style="color:var(--wood-pale)">~2.415 kcal</span>
+    </div>
+  </div>
+
+  <div class="meals-grid">
+    <div class="meal-card">
+      <div class="mc-time">07h00 — pré-academia</div>
+      <div class="mc-name">Café + Ovo rápido</div>
+      <div class="mc-items">2 ovos mexidos + 2 fatias pão de forma + café c/ leite semidesnatado (200ml)</div>
+      <div class="mc-kcal">~380 kcal · 22g prot · 32g carb · 14g gord</div>
+    </div>
+    <div class="meal-card">
+      <div class="mc-time">09h10 — pós-academia</div>
+      <div class="mc-name">Refeição de Recuperação</div>
+      <div class="mc-items">150g frango (peito/coxa) + 100g arroz cozido + salada (alface + tomate) + 1 fio azeite</div>
+      <div class="mc-kcal">~520 kcal · 45g prot · 55g carb · 12g gord</div>
+    </div>
+    <div class="meal-card">
+      <div class="mc-time">12h30 — almoço</div>
+      <div class="mc-name">Almoço Completo</div>
+      <div class="mc-items">150g filé mignon suíno + 100g arroz + salada alface+tomate + azeite + 1 maçã</div>
+      <div class="mc-kcal">~620 kcal · 45g prot · 65g carb · 18g gord</div>
+    </div>
+    <div class="meal-card">
+      <div class="mc-time">15h30 — lanche tarde</div>
+      <div class="mc-name">Snack Proteico</div>
+      <div class="mc-items">3 ovos cozidos + 2 fatias pão de forma + suco Clight (200ml)</div>
+      <div class="mc-kcal">~340 kcal · 22g prot · 26g carb · 14g gord</div>
+    </div>
+    <div class="meal-card">
+      <div class="mc-time">18h00 — pré-iFood</div>
+      <div class="mc-name">Refeição Pré-Pedal</div>
+      <div class="mc-items">100g frango + 80g arroz + tomate picado + azeite. Carboidrato pra sustentar 5h de pedal.</div>
+      <div class="mc-kcal">~420 kcal · 32g prot · 50g carb · 10g gord</div>
+    </div>
+    <div class="meal-card">
+      <div class="mc-time">23h30 — retorno iFood</div>
+      <div class="mc-name">Ceia Leve</div>
+      <div class="mc-items">2 ovos mexidos + 200ml leite semidesnatado + 1 fatia pão. Leve, digestão ok pra dormir.</div>
+      <div class="mc-kcal">~280 kcal · 22g prot · 24g carb · 10g gord</div>
+    </div>
+  </div>
+
+  <div class="ing-section">
+    <div class="ing-title">Ingredientes base — clique para remover / adicione novos</div>
+    <div class="ing-chips" id="ing-chips"></div>
+    <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;align-items:center">
+      <input id="ing-input" placeholder="novo ingrediente..." style="background:var(--bg4);border:1px solid var(--border2);color:var(--cream);font-family:'DM Mono',monospace;font-size:.6rem;padding:5px 8px;border-radius:2px;outline:none;width:150px">
+      <button onclick="addIng()" class="cbtn" style="padding:5px 11px">+ Adicionar</button>
+    </div>
+    <div style="font-size:.57rem;color:var(--text-faint);margin-top:6px;font-style:italic">Proteínas = verde · Carboidratos = amarelo · Gorduras = laranja · Vegetais = água</div>
+  </div>
+</div>
+
+<!-- ══════════ DIÁRIO QUINTA ══════════ -->
+<div class="view" id="v-quinta">
+  <div class="banner" style="border-left-color:var(--thu)">
+    <strong style="color:var(--thu)">Toda quinta-feira:</strong> lê as observações da semana abaixo, preenche a autoanálise, gera o compilado e manda ao NotebookLM ou cola aqui numa nova conversa.
+  </div>
+
+  <div class="diary-section">
+    <div class="diary-hdr" onclick="toggleDiary()">
+      <span class="diary-title" style="color:var(--thu)">Observações da Semana</span>
+      <span class="diary-meta" id="diary-count">0 obs registradas</span>
+      <span id="diary-ch" style="color:var(--text-dim);font-size:.8rem">▼</span>
+    </div>
+    <div class="diary-body" id="diary-body">
+      <div class="obs-grid" id="obs-compiled"></div>
+      <div class="compile-area">
+        <div class="compile-label">Texto compilado para NotebookLM</div>
+        <div class="compile-out empty" id="compile-text">Sem observações ainda. Anote nos blocos durante a semana.</div>
+        <div class="compile-btns">
+          <button class="cbtn primary" onclick="generateCompile()">⟳ Gerar compilação</button>
+          <button class="cbtn" onclick="copyCompile()">⎘ Copiar</button>
+          <button class="cbtn" onclick="clearWeek()">✕ Limpar semana</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="diary-section">
+    <div class="diary-hdr" onclick="toggleSR()">
+      <span class="diary-title" style="color:var(--wood-pale)">Autoanálise Semanal</span>
+      <span class="diary-meta">preencha toda quinta</span>
+      <span id="sr-ch" style="color:var(--text-dim);font-size:.8rem">▼</span>
+    </div>
+    <div class="diary-body" id="sr-body" style="gap:10px">
+      <div class="sr-grid">
+        <div><div class="sr-label" style="color:var(--bio)">✓ O que funcionou</div><textarea class="sr-ta" id="sr-good" placeholder="Quais blocos foram fluidos? O que facilitou?"></textarea></div>
+        <div><div class="sr-label" style="color:var(--red)">✕ O que travou</div><textarea class="sr-ta" id="sr-bad" placeholder="Onde travou? Qual conteúdo ficou sem entender?"></textarea></div>
+        <div><div class="sr-label" style="color:var(--amber)">→ Ajuste próxima semana</div><textarea class="sr-ta" id="sr-next" placeholder="O que muda? Qual matéria precisa mais tempo?"></textarea></div>
+        <div><div class="sr-label" style="color:var(--mat)">⚡ Energia e disposição</div><textarea class="sr-ta" id="sr-energy" placeholder="Sono, alimentação, cansaço físico afetaram?"></textarea></div>
+      </div>
+      <button class="cbtn" onclick="alert('Salvo! Clique em Gerar compilação para incluir no texto.')" style="width:fit-content">✓ Salvar autoanálise</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ FASES ══════════ -->
+<div class="view" id="v-fases">
+  <div class="timeline">
+    <div class="fase"><div class="fase-dot" style="background:var(--green)"></div><div class="fase-meta">Fase 1 · Mar–Mai 2026 — ATUAL</div><div class="fase-title" style="color:var(--green)">Fundamentos Exatas</div><div class="fase-desc">Iezzi completo. Funções, logaritmos, geometria, trigonometria. Física mecânica + óptica. Química orgânica. Meta: 80% Iezzi em mai/2026.</div><div class="fase-tags"><span class="fase-tag" style="border-color:var(--mat);color:var(--mat)">Mat</span><span class="fase-tag" style="border-color:var(--fis);color:var(--fis)">Fís</span><span class="fase-tag" style="border-color:var(--qui);color:var(--qui)">Qui</span></div></div>
+    <div class="fase"><div class="fase-dot" style="background:var(--amber)"></div><div class="fase-meta">Fase 2 · Jun–Ago 2026</div><div class="fase-title" style="color:var(--amber)">Expansão Humanas + Bio</div><div class="fase-desc">História Brasil intensiva. Geografia Brasil + geopolítica. Biologia completa. Obras obrigatórias de literatura. Primeiros simulados mensais.</div><div class="fase-tags"><span class="fase-tag" style="border-color:var(--bio);color:var(--bio)">Bio</span><span class="fase-tag" style="border-color:var(--his);color:var(--his)">His</span><span class="fase-tag" style="border-color:var(--geo);color:var(--geo)">Geo</span><span class="fase-tag" style="border-color:var(--por);color:var(--por)">Port</span></div></div>
+    <div class="fase"><div class="fase-dot" style="background:var(--fis)"></div><div class="fase-meta">Fase 3 · Set–Out 2026</div><div class="fase-title" style="color:var(--fis)">Intensificação + Simulados</div><div class="fase-desc">Revisão por matéria. Simulados semanais FUVEST 90q. Análise sistemática. Meta: 80% consistente por 4 semanas.</div><div class="fase-tags"><span class="fase-tag">Todas</span><span class="fase-tag" style="border-color:var(--wood-pale);color:var(--wood-pale)">Simulados</span></div></div>
+    <div class="fase"><div class="fase-dot" style="background:var(--red)"></div><div class="fase-meta">Fase 4 · Nov 2026</div><div class="fase-title" style="color:var(--red)">Reta Final</div><div class="fase-desc">Zero conteúdo novo. 100% consolidação. Simulado a cada 2 dias. Caderno de erros como único guia.</div><div class="fase-tags"><span class="fase-tag" style="border-color:var(--red);color:var(--red)">Alta pressão</span></div></div>
+    <div class="fase"><div class="fase-dot" style="background:var(--wood-pale)"></div><div class="fase-meta">PROVA · 22/11/2026</div><div class="fase-title" style="color:var(--wood-pale)">FUVEST 1ª Fase — IME-USP</div><div class="fase-desc">90 questões. Alvo 72q+ (80%). PPI ativo. Carreira 313 — Matemática.</div><div class="fase-tags"><span class="fase-tag" style="border-color:var(--wood-pale);color:var(--wood-pale)">IME-USP</span><span class="fase-tag" style="border-color:var(--wood-pale);color:var(--wood-pale)">Carreira 313</span><span class="fase-tag" style="border-color:var(--wood-pale);color:var(--wood-pale)">PPI</span></div></div>
+  </div>
+</div>
+
+<!-- ══════════ CONTEÚDO ══════════ -->
+<div class="view" id="v-caderno">
+  <div class="banner"><strong>Caderno — Matemática · FME Iezzi</strong> · Siga a ordem dos volumes. Marque cada seção como lida e registre seu score. Clique em <strong>↗ p.N</strong> para abrir o PDF.</div>
+  <div id="caderno-stats" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px"></div>
+  <div id="caderno-list"></div>
+</div>
+
+<!-- MODAL PDF -->
+<div id="pdf-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(26,23,20,.7);backdrop-filter:blur(3px);animation:fi .2s ease both">
+  <div style="position:absolute;inset:32px;background:var(--bg2);border:1px solid var(--border);border-radius:4px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.35)">
+    <!-- Modal header -->
+    <div style="padding:10px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;background:var(--bg3);flex-shrink:0">
+      <div style="flex:1">
+        <div id="pdf-modal-title" style="font-size:.65rem;font-weight:600;color:var(--ink2)"></div>
+        <div id="pdf-modal-sub" style="font-size:.52rem;color:var(--ink4);margin-top:1px"></div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span style="font-size:.52rem;color:var(--ink4)">ESC para fechar</span>
+        <button onclick="closePdfModal()" style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--ink3);background:transparent;border:1px solid var(--border);padding:3px 10px;border-radius:2px;cursor:pointer;transition:all .13s" onmouseenter="this.style.borderColor='var(--wood)';this.style.color='var(--wood)'" onmouseleave="this.style.borderColor='var(--border)';this.style.color='var(--ink3)'">✕ fechar</button>
+      </div>
+    </div>
+    <!-- Aviso de página -->
+    <div id="pdf-pg-banner" style="padding:5px 16px;background:#fefce8;border-bottom:1px solid var(--border);font-size:.56rem;color:var(--amber);display:flex;align-items:center;gap:6px;flex-shrink:0">
+      <span>⚠</span><span id="pdf-pg-text"></span>
+    </div>
+    <!-- iFrame -->
+    <iframe id="pdf-frame" src="" style="flex:1;border:none;width:100%;min-height:0" allow="autoplay"></iframe>
+  </div>
+</div>
+
+<div class="view" id="v-conteudo">
+  <div class="banner" style="border-left-color:var(--ink)">
+    <strong>Sequência cronológica de aprendizado</strong> baseada em 10 anos de FUVEST (2017–2026) ·
+    Livro + capítulo específico + quantidade de exercícios calibrada ·
+    📖 = conteúdo lido · ✏ = exercícios feitos (meta ≥80%) · Verde = aprovado · Vermelho = refazer ·
+    <strong style="color:var(--wood)">PRÓXIMO</strong> = tópico atual da matéria
+  </div>
+  <div id="conteudo-eta"></div>
+  <div id="conteudo-list"></div>
+</div>
+
+
+<!-- ══════════ CRONÔMETRO ══════════ -->
+<div class="view" id="v-crono">
+  <div class="clock-wrap">
+    <div class="clock-sess-lbl">Sessão ativa</div>
+    <div class="clock-disp"><span id="ck-m">25</span><span class="sep">:</span><span id="ck-s">00</span></div>
+    <div class="clock-phase" id="ck-phase">BLOCO 1 — CONTEÚDO NOVO</div>
+    <div class="clock-ctrls">
+      <button class="btn" onclick="ckReset()">↺ Reset</button>
+      <button class="btn pri" id="ck-btn" onclick="ckToggle()">▶ Iniciar</button>
+      <button class="btn" onclick="ckSkip()">→ Pular</button>
+    </div>
+    <div class="sess-sel">
+      <button class="sbtn on" onclick="ckSet(25,'BLOCO 1 — CONTEÚDO NOVO',this)">25min</button>
+      <button class="sbtn" onclick="ckSet(50,'BLOCO 1 — SESSÃO DUPLA',this)">50min</button>
+      <button class="sbtn" onclick="ckSet(120,'BLOCO COMPLETO 2h',this)">2h</button>
+      <button class="sbtn" onclick="ckSet(15,'INTERVALO',this)">15min Intervalo</button>
+      <button class="sbtn" onclick="ckSet(5,'ESCRITA DISCURSIVA 5min',this)">5min Escrita</button>
+    </div>
+  </div>
+</div>
+
+<div class="bbar">
+  <span>Wood Capital Study OS</span><span class="sep">·</span>
+  <span>FUVEST 22/11/2026</span><span class="sep">·</span>
+  <span>IME-USP Mat</span>
+  <div class="live"><div class="bdot"></div><span id="bbar-t">--:--</span></div>
+</div>
+
+<script>
+// ════════════ DAYS DATA ════════════
+// start/end in minutes from midnight for current-block detection (null = no highlight)
+// blocks that span midnight use end>1440
+function mkB(t,l,d,type,extra){return Object.assign({t,l,d,type},extra||{});}
+
+const DAYS=[
+  {id:'seg',name:'Segunda',color:'var(--mat)',tags:[{l:'Matemática',c:'c-mat'},{l:'Academia',c:'c-bio'}],
+    blocks:[
+      mkB('07h00–08h00','🏋️ Pré-treino','☕ Café rápido pré-academia: 2 fatias pão + café c/ leite. Leve — não treinar de barriga cheia nem vazia.','b-academia',{start:420,end:480}),
+      mkB('08h00–09h10','🍳 Pós-treino — Recuperação','150g frango + 80g arroz + tomate + azeite. Janela anabólica: comer em até 30–40min após o treino. ~520 kcal · 45g prot.','b-food',{start:480,end:550}),
+      mkB('09h15–11h15 · B1','Matemática — Conteúdo','Iezzi: Funções. Fichamento + exercícios guiados.','b-est1',{color:'var(--mat)',flag:true,obs:true,flagId:'seg-b1',start:555,end:675}),
+      mkB('11h15–11h30','Intervalo','Sai da cadeira. Água. Andar.','b-rest',{start:675,end:690}),
+      mkB('11h30–13h30 · B2','Matemática — Questões','15–20q FUVEST cronometradas. Caderno de erros.','b-est2',{color:'var(--mat)',flag:true,obs:true,flagId:'seg-b2',start:690,end:810}),
+      mkB('13h30–14h15','🍽️ Almoço','Filé mignon suíno 150g + arroz 100g + alface + tomate + azeite + 1 maçã. ~620 kcal · 45g prot. Come sentado, sem tela.','b-food',{start:810,end:855}),
+      mkB('14h30–16h30 · B3','Humanas — Rotação','His (Sem1) / Geo (Sem2) / Port-Lit (Sem3) / Fil+Soc (Sem4). Leitura + fichamento + 10q.','b-est1',{color:'var(--his)',flag:true,obs:true,flagId:'seg-b3',start:870,end:990}),
+      mkB('16h30–17h00','Intervalo + hidratação','Água, lanche leve: 2 ovos cozidos + maçã. ~180 kcal. Prep mental para iFood.','b-rest',{start:990,end:1020}),
+      mkB('17h30–18h00','🧳 Prep iFood','Refeição pré-pedal: 100g frango + 80g arroz. Carboidrato pra sustentar 5h. ~420 kcal · 32g prot.','b-food',{start:1050,end:1080}),
+      mkB('18h30–23h30','🛵 iFood','Entregas. NotebookLM Mat/His no fone.','b-ifood',{start:1110,end:1410}),
+      mkB('23h30–00h00','🌙 Jantar + dormir','Ceia leve: 2 ovos mexidos + 1 fatia pão + 200ml leite. ~280 kcal. Dorme.','b-sleep',{start:1410,end:1440}),
+    ]},
+  {id:'ter',name:'Terça',color:'var(--fis)',tags:[{l:'Física',c:'c-fis'},{l:'Academia',c:'c-bio'}],
+    blocks:[
+      mkB('07h00–08h00','🏋️ Pré-treino','Café rápido + 2 fatias pão antes da academia.','b-academia',{start:420,end:480}),
+      mkB('08h00–09h10','🍳 Pós-treino — Recuperação','2 ovos + 80g arroz + pão. Pós-treino obrigatório. ~380 kcal · 22g prot.','b-food',{start:480,end:550}),
+      mkB('09h15–11h15 · B1','Física — Conteúdo','Mecânica, óptica, eletricidade. Escrita 5min.','b-est1',{color:'var(--fis)',flag:true,obs:true,flagId:'ter-b1',start:555,end:675}),
+      mkB('11h15–11h30','Intervalo','Sai da cadeira.','b-rest',{start:675,end:690}),
+      mkB('11h30–13h30 · B2','Física — Questões','15q FUVEST. Gráfico interpretativo + multi-conceito.','b-est2',{color:'var(--fis)',flag:true,obs:true,flagId:'ter-b2',start:690,end:810}),
+      mkB('13h30–14h15','🍽️ Almoço','150g frango + 100g arroz + salada alface+tomate + azeite. ~520 kcal · 45g prot. Comer tranquilo.','b-food',{start:810,end:855}),
+      mkB('14h30–16h30 · B3','Química — Rotação / Revisão','Orgânica, equilíbrio ou revisão do bloco da manhã. 10–15 questões.','b-est1',{color:'var(--qui)',flag:true,obs:true,flagId:'ter-b3',start:870,end:990}),
+      mkB('16h30–17h00','Intervalo + hidratação','Lanche: 3 ovos cozidos + suco Clight. ~260 kcal.','b-rest',{start:990,end:1020}),
+      mkB('17h30–18h00','🧳 Prep iFood','Refeição pré-pedal: frango + arroz. ~420 kcal.','b-food',{start:1050,end:1080}),
+      mkB('18h30–23h30','🛵 iFood','Entregas. NotebookLM Fís+Qui.','b-ifood',{start:1110,end:1410}),
+      mkB('23h30–00h00','🌙 Jantar + dormir','2 ovos + leite 200ml + 1 fatia pão. ~280 kcal. Dorme.','b-sleep',{start:1410,end:1440}),
+    ]},
+  {id:'qua',name:'Quarta',color:'var(--qui)',tags:[{l:'Química',c:'c-qui'},{l:'Academia',c:'c-bio'}],
+    blocks:[
+      mkB('07h00–08h00','🏋️ Pré-treino','Café + pão antes da academia.','b-academia',{start:420,end:480}),
+      mkB('08h00–09h10','🍳 Pós-treino — Recuperação','150g frango + 80g arroz + leite 200ml. ~520 kcal · 45g prot.','b-food',{start:480,end:550}),
+      mkB('09h15–11h15 · B1','Química — Conteúdo','Orgânica, equilíbrio, eletroquímica. Escrita 5min.','b-est1',{color:'var(--qui)',flag:true,obs:true,flagId:'qua-b1',start:555,end:675}),
+      mkB('11h15–11h30','Intervalo','Água.','b-rest',{start:675,end:690}),
+      mkB('11h30–13h30 · B2','Química — Questões','15q FUVEST. Estequiometria contextualizada.','b-est2',{color:'var(--qui)',flag:true,obs:true,flagId:'qua-b2',start:690,end:810}),
+      mkB('13h30–14h15','🍽️ Almoço','Filé mignon suíno + arroz + salada + azeite + maçã. ~620 kcal · 45g prot.','b-food',{start:810,end:855}),
+      mkB('14h30–16h30 · B3','Biologia — Rotação','Genética, evolução ou ecologia. Leitura + 10q.','b-est1',{color:'var(--bio)',flag:true,obs:true,flagId:'qua-b3',start:870,end:990}),
+      mkB('16h30–17h00','Intervalo + hidratação','Ovos cozidos + maçã + Clight.','b-rest',{start:990,end:1020}),
+      mkB('17h30–18h00','🧳 Prep iFood','Frango + arroz pré-pedal.','b-food',{start:1050,end:1080}),
+      mkB('18h30–23h30','🛵 iFood','Entregas. NotebookLM Qui+Port.','b-ifood',{start:1110,end:1410}),
+      mkB('23h30–00h00','🌙 Jantar + dormir','Ceia leve: 2 ovos + leite + pão. ~280 kcal.','b-sleep',{start:1410,end:1440}),
+    ]},
+  {id:'qui',name:'Quinta',color:'var(--thu)',tags:[{l:'Folga Total',c:'c-thu'},{l:'Teórico',c:'c-thu'}],isThursday:true,
+    blocks:[
+      mkB('Sem alarme','☀️ Acorda livre','Sem academia. Sem iFood. Deixa o corpo recuperar.','b-rest',{}),
+      mkB('Manhã','🍳 Café completo','Ovos mexidos + pão + leite + fruta. Come com calma. Único dia sem pressa de horário.','b-food',{}),
+      mkB('Manhã/Tarde · Teórico','📺 Vídeo-aulas','YouTube, Khan Academy, Descomplica. Uma matéria. Só absorção — sem exercício. Anotações soltas.','b-thu',{color:'var(--thu)',flag:true,obs:true,flagId:'qui-video'}),
+      mkB('Tarde','🍽️ Almoço com calma','Prepara algo bom com o que tem. Almoço real sem pressa.','b-food',{}),
+      mkB('Tarde · Reflexão','🪵 Pensar + descanso ativo','Leitura livre. Bike sem destino. Woodworking. Conteúdo da semana assenta.','b-thu',{color:'var(--thu)',flag:true,obs:true,flagId:'qui-reflexao'}),
+      mkB('Final da tarde','📋 Compilar observações','Abre aba "Diário Quinta". Lê tudo. Preenche autoanálise. Gera o compilado.','b-rev',{flag:true,obs:false,flagId:'qui-diario'}),
+      mkB('Noite','🌙 Dorme cedo','Sem iFood. Dorme antes de meia-noite. Recarrega para sexta.','b-sleep',{}),
+    ]},
+  {id:'sex',name:'Sexta',color:'var(--bio)',tags:[{l:'Biologia',c:'c-bio'},{l:'Academia',c:'c-bio'}],
+    blocks:[
+      mkB('07h00–08h00','🏋️ Pré-treino','Café + pão antes da academia.','b-academia',{start:420,end:480}),
+      mkB('08h00–09h10','🍳 Pós-treino — Recuperação','150g frango + 80g arroz + salada. ~520 kcal · 45g prot.','b-food',{start:480,end:550}),
+      mkB('09h15–11h15 · B1','Biologia — Conteúdo','Genética, evolução, ecologia, fisiologia.','b-est1',{color:'var(--bio)',flag:true,obs:true,flagId:'sex-b1',start:555,end:675}),
+      mkB('11h15–11h30','Intervalo','Sai da cadeira.','b-rest',{start:675,end:690}),
+      mkB('11h30–13h30 · B2','Bio/Humanas — Questões','10q Bio + 5q rotação (His/Geo/Port/Fil).','b-est2',{color:'var(--bio)',flag:true,obs:true,flagId:'sex-b2',start:690,end:810}),
+      mkB('13h30–14h15','🍽️ Almoço','Frango + arroz + salada + azeite. ~520 kcal · 45g prot.','b-food',{start:810,end:855}),
+      mkB('14h30–16h30 · B3','Matemática / Revisão Extra','Geometria, funções ou tópico com mais erros na semana. 15 questões focadas.','b-est1',{color:'var(--mat)',flag:true,obs:true,flagId:'sex-b3',start:870,end:990}),
+      mkB('16h30–17h00','Intervalo + hidratação','Snack: 2 ovos + maçã + Clight.','b-rest',{start:990,end:1020}),
+      mkB('17h30–18h00','🧳 Prep iFood','Frango + arroz pré-pedal. ~420 kcal.','b-food',{start:1050,end:1080}),
+      mkB('18h30–23h30','🛵 iFood','Entregas. NotebookLM Bio+Ing.','b-ifood',{start:1110,end:1410}),
+      mkB('23h30–00h00','🌙 Jantar + dormir','2 ovos + leite + pão. ~280 kcal.','b-sleep',{start:1410,end:1440}),
+    ]},
+  {id:'sab',name:'Sábado',color:'var(--wood-pale)',tags:[{l:'Simulado',c:'c-wood'},{l:'Academia',c:'c-bio'}],
+    blocks:[
+      mkB('07h00–08h00','🏋️ Pré-treino','Café + pão leve pré-academia.','b-academia',{start:420,end:480}),
+      mkB('08h00–09h10','🍳 Pós-treino — Recuperação','2 ovos + arroz + leite. Refeição completa antes do simulado.','b-food',{start:480,end:550}),
+      mkB('09h15–11h45 · Simulado','Simulado Completo','Prova FUVEST antiga (90q ou 45q). Condições reais. Sem pausa.','b-rev',{flag:true,obs:true,flagId:'sab-sim',start:555,end:705}),
+      mkB('11h45–13h30','Correção Analítica','% por matéria vs 80%. Gargalos → caderno de erros.','b-rev',{flag:true,obs:true,flagId:'sab-corr',start:705,end:810}),
+      mkB('13h30–14h15','🍽️ Almoço','Filé suíno + arroz + salada + azeite + maçã. ~620 kcal.','b-food',{start:810,end:855}),
+      mkB('14h30–16h00 · B3','Revisão Erros do Simulado','Volta só nas questões que errou. Entende o porquê. Não faz questões novas.','b-rev',{flag:true,obs:true,flagId:'sab-rev',start:870,end:960}),
+      mkB('16h00–18h00','Descanso pré-iFood','Dorme um pouco se precisar. Sábado = maior volume de iFood.','b-rest',{start:960,end:1080}),
+      mkB('18h30–23h30','🛵 iFood','Maior volume da semana.','b-ifood',{start:1110,end:1410}),
+      mkB('23h30–00h00','🌙 Jantar + dormir','Ceia leve. ~280 kcal.','b-sleep',{start:1410,end:1440}),
+    ]},
+  {id:'dom',name:'Domingo',color:'var(--his)',tags:[{l:'Humanas',c:'c-his'},{l:'Revisão',c:'c-wood'}],
+    blocks:[
+      mkB('08h00–09h10','☕ Café tranquilo','Sem academia. Ovos + pão + leite + maçã. Come devagar.','b-food',{start:480,end:550}),
+      mkB('09h15–11h15 · B1','Humanas — Rotação','Sem1:His BR / Sem2:Geo / Sem3:Port-Lit / Sem4:Fil+Soc','b-est1',{color:'var(--his)',flag:true,obs:true,flagId:'dom-b1',start:555,end:675}),
+      mkB('11h15–11h30','Intervalo','Sai da cadeira.','b-rest',{start:675,end:690}),
+      mkB('11h30–13h30 · B2','Revisão Semanal','Relê caderno de erros. Flashcards. Sem questões novas.','b-rev',{flag:true,obs:true,flagId:'dom-b2',start:690,end:810}),
+      mkB('13h30–14h15','🍽️ Almoço','Frango + arroz + salada. Almoço completo.','b-food',{start:810,end:855}),
+      mkB('14h30–16h00 · B3','Matemática Extra — Geometria','Geometria plana ou espacial. 10–12 questões FUVEST.','b-est2',{color:'var(--mat)',flag:true,obs:true,flagId:'dom-b3',start:870,end:960}),
+      mkB('16h00–18h00','Tarde livre real','Lazer sem culpa. Bike, woodworking, leitura prazerosa.','b-rest',{start:960,end:1080}),
+      mkB('18h30–23h30','🛵 iFood','Entregas domingo noite.','b-ifood',{start:1110,end:1410}),
+      mkB('23h30–00h00','🌙 Jantar + dormir','Ceia leve: ovos + leite. ~280 kcal.','b-sleep',{start:1410,end:1440}),
+    ]},
+];
+
+// ════════════ TREINO DATA ════════════
+const TREINO=[
+  {mes:1,label:'Mês 1 — Adaptação Neuromuscular',color:'var(--green)',obj:'Aprender os movimentos com técnica correta. Cargas conservadoras. Foco em conexão mente-músculo. Corpo se adapta ao estímulo. Não vai falhar — vai sentir o músculo.',
+    nota:'Descanso entre séries: 60–90s. Cardio embutido na bike/iFood. Esse mês é sobre padrão motor, não peso.',
+    dias:[
+      {dia:'Seg + Qua + Sex — Peito + Tríceps',focus:'PEITO + TRÍCEPS',fcolor:'var(--fis)',
+        ex:[
+          {n:'Supino com halteres',s:'3×12',note:'Controla a descida 3 segundos'},
+          {n:'Crucifixo inclinado halter',s:'3×12',note:'Sente o alongamento no peito'},
+          {n:'Flexão de braço',s:'3×10–15',note:'Pode joelhos se precisar'},
+          {n:'Tríceps testa (halter)',s:'3×12',note:'Cotovelos fixos, não abre'},
+          {n:'Tríceps corda (polia)',s:'3×15',note:'Extensão total no final'},
+        ]},
+      {dia:'Ter + Qui (se treinar) + Sáb — Costas + Bíceps',focus:'COSTAS + BÍCEPS',fcolor:'var(--mat)',
+        ex:[
+          {n:'Remada curvada halter',s:'3×12',note:'Puxa cotovelo para trás, não para cima'},
+          {n:'Pulldown polia (puxada)',s:'3×12',note:'Puxa até o queixo, peito expandido'},
+          {n:'Remada unilateral halter',s:'3×12 cada',note:'Apoio correto, coluna reta'},
+          {n:'Rosca direta halter',s:'3×12',note:'Sem balanço, cotovelo fixo'},
+          {n:'Rosca martelo',s:'3×12',note:'Neutro, trabalha braquial'},
+        ]},
+      {dia:'Toda sessão — Pernas (base)',focus:'PERNAS — BASE',fcolor:'var(--bio)',
+        ex:[
+          {n:'Agachamento livre (barra ou halter)',s:'3×12',note:'Joelhos na linha do pé'},
+          {n:'Leg press 45°',s:'3×15',note:'Pé mais alto = mais glúteo e posterior'},
+          {n:'Cadeira extensora',s:'3×15',note:'Isola quadríceps'},
+          {n:'Stiff halter',s:'3×12',note:'Posterior e glúteo, coluna reta'},
+        ]},
+    ]},
+  {mes:2,label:'Mês 2 — Hipertrofia Iniciante',color:'var(--amber)',obj:'Aumenta progressão de carga. Vai para falha nas últimas repetições. Adiciona exercícios de ombro. Distribuição 3x full body ou push/pull/legs.',
+    nota:'Progressão de carga: toda semana tenta adicionar 2,5kg ou 1 rep a mais. Se completou todas as reps com boa forma → sobe o peso na próxima sessão.',
+    dias:[
+      {dia:'Seg + Qui — Push (Peito + Ombro + Tríceps)',focus:'PUSH',fcolor:'var(--fis)',
+        ex:[
+          {n:'Supino inclinado halter',s:'4×10',note:'Foco no peito superior'},
+          {n:'Desenvolvimento ombro halter',s:'4×12',note:'Cotovelos 90°, sobe controlado'},
+          {n:'Elevação lateral',s:'3×15',note:'Ombro médio — braços finos foco'},
+          {n:'Crucifixo reto halter',s:'3×12',note:'Peito completo'},
+          {n:'Tríceps banco',s:'3×12',note:'Corpo reto, desce até 90°'},
+          {n:'Tríceps corda extensão',s:'3×15',note:'Extensão total, pausa'},
+        ]},
+      {dia:'Ter + Sex — Pull (Costas + Bíceps + Ombro posterior)',focus:'PULL',fcolor:'var(--mat)',
+        ex:[
+          {n:'Barra fixa (ou puxada)',s:'4×8',note:'Se não faz barra fixa, puxada assistida'},
+          {n:'Remada cavalinho (máquina)',s:'4×12',note:'Cotovelo junto ao corpo'},
+          {n:'Face pull polia',s:'3×15',note:'Ombro posterior e manguito'},
+          {n:'Rosca concentrada',s:'3×12',note:'Máxima contração no topo'},
+          {n:'Rosca 21 (halter)',s:'2×21',note:'7 embaixo + 7 cima + 7 completo'},
+        ]},
+      {dia:'Qua + Sáb — Legs',focus:'PERNAS',fcolor:'var(--bio)',
+        ex:[
+          {n:'Agachamento livre',s:'4×10',note:'Profundidade total, peso progressivo'},
+          {n:'Leg press 45°',s:'4×15',note:'Variação de pegada'},
+          {n:'Avanço (lunge) halter',s:'3×10 cada',note:'Equilíbrio e glúteo'},
+          {n:'Mesa flexora (posterior)',s:'3×15',note:'Isola bíceps femoral'},
+          {n:'Panturrilha em pé',s:'4×20',note:'Lento, segura no topo 1s'},
+          {n:'Abdominal prancha',s:'3×40s',note:'Estabilização do core'},
+        ]},
+    ]},
+  {mes:3,label:'Mês 3 — Volume + Intensidade',color:'var(--red)',obj:'Aumenta volume por série. Introduz técnicas de intensidade. Abdômen direto 3x/semana. Foco em lagging parts (braços e abdômen).',
+    nota:'Semana de deload na semana 4 do mês 3: reduz 40% do volume para recuperação. Depois avalia se vai manter esse plano ou ajustar com base nos resultados.',
+    dias:[
+      {dia:'Seg + Qui — Push + Abdômen',focus:'PUSH + ABS',fcolor:'var(--fis)',
+        ex:[
+          {n:'Supino reto halter',s:'4×10',note:'Progressão de carga obrigatória'},
+          {n:'Supino inclinado halteres',s:'4×10',note:'Peito superior'},
+          {n:'Desenvolvimento ombro',s:'4×12',note:'Pausa 1s embaixo'},
+          {n:'Elevação lateral dropset',s:'3×12+8',note:'Dropset: peso normal → peso menor sem parar'},
+          {n:'Tríceps coice halter',s:'3×15',note:'Foca em extensão completa'},
+          {n:'Abdominal supra',s:'4×20',note:'Lento, não joga a cabeça'},
+          {n:'Abdominal oblíquo',s:'3×20',note:'Reduz gordura lateral'},
+          {n:'Prancha lateral',s:'3×30s',note:'Cada lado'},
+        ]},
+      {dia:'Ter + Sex — Pull + Abdômen',focus:'PULL + ABS',fcolor:'var(--mat)',
+        ex:[
+          {n:'Barra fixa (puxada)',s:'4×8–10',note:'Progressão a cada semana'},
+          {n:'Remada curvada barra',s:'4×10',note:'Costas espessas'},
+          {n:'Puxada frente pegada aberta',s:'3×12',note:'Costas largas'},
+          {n:'Rosca direta barra',s:'4×10',note:'Carga máxima com boa forma'},
+          {n:'Rosca inclinada halter',s:'3×12',note:'Alongamento total do bíceps'},
+          {n:'Abdominal infra (elevação perna)',s:'4×15',note:'Controlado, sem impulso'},
+        ]},
+      {dia:'Qua + Sáb — Legs completo',focus:'PERNAS COMPLETO',fcolor:'var(--bio)',
+        ex:[
+          {n:'Agachamento livre',s:'5×8',note:'Semana de carga máxima'},
+          {n:'Leg press 45°',s:'4×15',note:'Foco no volume'},
+          {n:'Avanço andando (halter)',s:'3×12 cada',note:'Lunges andando'},
+          {n:'Mesa flexora',s:'4×12',note:'Bíceps femoral'},
+          {n:'Cadeira extensora',s:'3×15',note:'Quadríceps isolado'},
+          {n:'Panturrilha sentado',s:'4×20',note:'Sóleo, diferente do em pé'},
+          {n:'Abdominal prancha + variação',s:'3×45s',note:'Prancha normal + alternando braços'},
+        ]},
+    ]},
+];
+
+// ════════════ MATERIAS ════════════
+const MATS=[
+  {id:'mat',name:'Matemática',color:'var(--mat)',qs:13,prog:15,freq:'Prioridade máxima',topics:[{n:'Funções (quad.,log.,exp.,mod.,comp.)',f:10},{n:'Geometria Espacial',f:10},{n:'Geometria Plana',f:9},{n:'Geometria Analítica',f:8},{n:'Trigonometria',f:7},{n:'PA e PG',f:7},{n:'Probabilidade e Combinatória',f:6},{n:'Logaritmo/Potenciação',f:6},{n:'Matrizes/Sistemas',f:4},{n:'Matemática financeira',f:3}]},
+  {id:'bio',name:'Biologia',color:'var(--bio)',qs:12,prog:5,freq:'Alta frequência',topics:[{n:'Genética (ligação, epistasia, XY)',f:10},{n:'Evolução e especiação',f:10},{n:'Ecologia e impacto ambiental',f:9},{n:'Fisiologia humana',f:8},{n:'Citologia e bioquímica',f:7},{n:'Botânica e reprodução',f:5},{n:'Biotecnologia',f:5},{n:'Parasitologia',f:4}]},
+  {id:'fis',name:'Física',color:'var(--fis)',qs:10,prog:8,freq:'Média-alta',topics:[{n:'Mecânica (dinâmica, energia, colisões)',f:10},{n:'Óptica geométrica',f:9},{n:'Eletricidade e circuitos',f:8},{n:'Termodinâmica e calorimetria',f:7},{n:'Ondulatória',f:6},{n:'Eletromagnetismo',f:5},{n:'Física moderna',f:4}]},
+  {id:'qui',name:'Química',color:'var(--qui)',qs:10,prog:5,freq:'Média-alta',topics:[{n:'Química orgânica',f:10},{n:'Equilíbrio químico e pH',f:9},{n:'Eletroquímica',f:8},{n:'Estequiometria contextualizada',f:8},{n:'Cinética química',f:7},{n:'Termoquímica (Hess)',f:6},{n:'Tabela periódica',f:5},{n:'Polímeros',f:4}]},
+  {id:'his',name:'História',color:'var(--his)',qs:9,prog:3,freq:'Média',topics:[{n:'Brasil Imperial e República',f:10},{n:'Brasil séc. XX (Vargas, Ditadura)',f:10},{n:'Brasil colonial e sedições',f:7},{n:'Europa moderna',f:7},{n:'Industrialização',f:6},{n:'África e diáspora',f:6},{n:'América Latina',f:5},{n:'Antiguidade e Idade Média',f:4}]},
+  {id:'geo',name:'Geografia',color:'var(--geo)',qs:9,prog:3,freq:'Média',topics:[{n:'Brasil: biomas, urbanização',f:10},{n:'Geopolítica e relações internac.',f:9},{n:'Amazônia e meio ambiente',f:8},{n:'Energia e recursos naturais',f:7},{n:'Hidrografia',f:6},{n:'Clima e geologia',f:6},{n:'Migrações e refugiados',f:5}]},
+  {id:'por',name:'Português / Literatura',color:'var(--por)',qs:14,prog:10,freq:'Prioridade máxima',topics:[{n:'Interpretação de texto',f:10},{n:'Obras obrigatórias (Machado/Graciliano/Drummond)',f:10},{n:'Figuras de linguagem',f:9},{n:'Literatura africana',f:7},{n:'Análise sintática',f:7},{n:'Modernismo e Pré-modernismo',f:6},{n:'Romantismo e Realismo',f:6},{n:'Gêneros textuais',f:5}]},
+  {id:'fil',name:'Filosofia / Sociologia',color:'var(--fil)',qs:8,prog:2,freq:'Complementar',topics:[{n:'Filosofia grega',f:9},{n:'Sociologia contemp. (gênero, raça)',f:9},{n:'Weber: Estado e burocracia',f:8},{n:'Filosofia moderna (Kant, Hume)',f:7},{n:'Durkheim',f:6},{n:'Marx',f:5},{n:'Fenomenologia',f:4}]},
+];
+
+// ════════════ INGREDIENTES ════════════
+let ings=[
+  {n:'Ovo',t:'protein'},{n:'Frango',t:'protein'},{n:'Filé Mignon Suíno',t:'protein'},
+  {n:'Leite Semidesnatado',t:'protein'},{n:'Arroz',t:'carb'},{n:'Pão de Forma',t:'carb'},
+  {n:'Tomate',t:'veg'},{n:'Alface',t:'veg'},{n:'Maçã',t:'veg'},
+  {n:'Azeite',t:'fat'},{n:'Suco Clight',t:'carb'},
+];
+
+// ════════════ WATER ════════════
+let waterMl=0;
+const WATER_GOAL=3000;
+
+function addWater(ml){
+  waterMl=Math.min(waterMl+ml,WATER_GOAL+500);
+  updateWater();
+}
+
+function resetWater(){
+  waterMl=0;
+  updateWater();
+}
+
+function updateWater(){
+  const pct=Math.min(waterMl/WATER_GOAL,1);
+  const pctDisplay=Math.round(pct*100);
+
+  document.getElementById('water-ml').textContent=waterMl;
+  document.getElementById('water-mini-val').textContent=waterMl;
+  document.getElementById('hydra-bar').style.width=(pct*100)+'%';
+
+  // bottle fill animation
+  const fillRect=document.getElementById('water-fill-rect');
+  const waveRect=document.getElementById('water-wave');
+  const bottleTop=38, bottleBottom=102, bottleH=bottleBottom-bottleTop;
+  const fillH=Math.round(pct*bottleH);
+  const fillY=bottleBottom-fillH;
+  fillRect.setAttribute('y',fillY);
+  fillRect.setAttribute('height',fillH);
+  document.getElementById('bottle-pct').textContent=pctDisplay+'%';
+
+  // wave effect
+  waveRect.setAttribute('y',fillY);
+  waveRect.setAttribute('opacity','0.5');
+  setTimeout(()=>waveRect.setAttribute('opacity','0'),400);
+
+  // cups (each cup = 200ml)
+  const cups=document.getElementById('hydra-cups');
+  cups.innerHTML='';
+  const totalCups=Math.ceil(WATER_GOAL/200);
+  const filledCups=Math.floor(waterMl/200);
+  for(let i=0;i<totalCups;i++){
+    const c=document.createElement('div');
+    c.className='cup'+(i<filledCups?' filled':'');
+    cups.appendChild(c);
+  }
+
+  // animate HUD
+  document.querySelector('.hydra-hud').classList.add('wave-effect');
+  setTimeout(()=>document.querySelector('.hydra-hud').classList.remove('wave-effect'),400);
+}
+
+// ════════════ RENDER WEEK ════════════
+const storage={};
+
+// JS weekday: 0=Sun,1=Mon,...,6=Sat → map to our array index
+const JS_DAY_MAP={0:6,1:0,2:1,3:2,4:3,5:4,6:5}; // Sun→dom(6), Mon→seg(0)...
+
+function getNowMinutes(){
+  const n=new Date();
+  return n.getHours()*60+n.getMinutes();
+}
+
+function getTodayIdx(){
+  return JS_DAY_MAP[new Date().getDay()];
+}
+
+function renderWeek(){
+  const grid=document.getElementById('week-grid');
+  grid.innerHTML='';
+  const todayIdx=getTodayIdx();
+  const nowMin=getNowMinutes();
+
+  DAYS.forEach((day,dayIdx)=>{
+    const isToday=(dayIdx===todayIdx);
+    const col=document.createElement('div');
+    let cls='dcol'+(day.isThursday?' thu-special':'')+(isToday?' today':'');
+    col.className=cls;
+    col.style.borderTopColor=day.color;
+    if(isToday) col.id='today-col';
+
+    // day header (grid-row 1)
+    const todayBadge=isToday?`<span class="today-badge">HOJE</span>`:'';
+    const tagsHtml=day.tags.map(t=>`<span class="dtag ${t.c}${day.isThursday?' thu-badge':''}">${t.l}</span>`).join('');
+    const headDiv=document.createElement('div');
+    headDiv.className='dhead';
+    headDiv.innerHTML=`<span class="dname">${day.name}${todayBadge}</span><div class="dtags">${tagsHtml}</div>`;
+    col.appendChild(headDiv);
+
+    // blocks — each gets grid-row: N+2 (row 1 = header, rows 2..12 = slots)
+    day.blocks.forEach((b,bi)=>{
+      const isNow=isToday && b.start!=null && b.end!=null && nowMin>=b.start && nowMin<b.end;
+      const nowDot=isNow?`<span class="now-pulse"></span>`:'';
+      const cs=b.color?`color:${b.color}`:'';
+
+      let flagHtml='';
+      if(b.flag){
+        const st=storage[b.flagId]||{done:false,skip:false,obs:''};
+        flagHtml=`
+          <div class="flag-row">
+            <button class="flag-btn ${st.done?'done':''}" onclick="toggleFlag('${b.flagId}','done')" title="Concluído">✓</button>
+            <button class="flag-btn ${st.skip?'skip':''}" onclick="toggleFlag('${b.flagId}','skip')" title="Pulei">—</button>
+            <span class="flag-label">${st.done?'✓ concluído':st.skip?'— pulado':'marcar'}</span>
+            ${b.obs?`<button class="obs-btn" onclick="toggleObs('obs-${b.flagId}')">+ obs</button>`:''}
+          </div>
+          ${b.obs?`<div class="obs-area ${st.obs?'open':''}" id="obs-${b.flagId}"><textarea placeholder="Como foi? Dificuldades? Facilidades?" onchange="saveObs('${b.flagId}',this.value)">${st.obs||''}</textarea></div>`:''}`;
+      }
+
+      const blk=document.createElement('div');
+      blk.className=`blk ${b.type}${isNow?' now-block':''}`;
+      blk.style.gridRow=`${bi+2}`; // row 1 = header, slots start at 2
+      if(b.flagId) blk.id='blk-'+b.flagId;
+      blk.innerHTML=`<div class="btime">${nowDot}${b.t}</div><div class="blabel" style="${cs}">${b.l}</div><div class="bdesc">${b.d}</div>${flagHtml}`;
+      col.appendChild(blk);
+    });
+
+    grid.appendChild(col);
+  });
+
+  // scroll today into view
+  const todayEl=document.getElementById('today-col');
+  if(todayEl) setTimeout(()=>todayEl.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'}),300);
+}
+
+function toggleFlag(id,type){
+  if(!storage[id])storage[id]={done:false,skip:false,obs:''};
+  if(type==='done'){storage[id].done=!storage[id].done;if(storage[id].done)storage[id].skip=false;}
+  if(type==='skip'){storage[id].skip=!storage[id].skip;if(storage[id].skip)storage[id].done=false;}
+  renderWeek();
+}
+function toggleObs(id){const el=document.getElementById(id);if(el)el.classList.toggle('open');}
+function saveObs(fid,val){if(!storage[fid])storage[fid]={done:false,skip:false,obs:''};storage[fid].obs=val;}
+
+// ════════════ RENDER TREINO ════════════
+function renderTreino(){
+  const list=document.getElementById('treino-list');
+  list.innerHTML='';
+  TREINO.forEach(m=>{
+    const sec=document.createElement('div');
+    sec.className='treino-month';
+    const diasHtml=m.dias.map(d=>`
+      <div class="treino-dia">
+        <div class="td-header">
+          <span class="td-day">${d.dia}</span>
+          <span class="td-focus dtag" style="background:rgba(255,255,255,.05);color:${d.fcolor};border:1px solid ${d.fcolor}22">${d.focus}</span>
+        </div>
+        <div class="exercicios">
+          ${d.ex.map((e,i)=>`
+            <div class="ex-item">
+              <span class="ex-num">${i+1}</span>
+              <span class="ex-name">${e.n}</span>
+              <span class="ex-sets">${e.s}</span>
+            </div>
+            ${e.note?`<div style="padding:0 0 4px 22px"><span class="ex-note">${e.note}</span></div>`:''}
+          `).join('')}
+        </div>
+      </div>`).join('');
+    sec.innerHTML=`
+      <div class="tm-hdr" onclick="toggleTreino('tm${m.mes}')">
+        <div class="tm-dot" style="background:${m.color}"></div>
+        <div class="tm-title" style="color:${m.color}">${m.label}</div>
+        <div class="tm-meta">${m.obj.substring(0,60)}...</div>
+      </div>
+      <div class="tm-body" id="tm${m.mes}">
+        <div class="prog-note">${m.obj}</div>
+        <div class="treino-dias">${diasHtml}</div>
+        <div class="prog-note" style="border-color:var(--amber)">💡 ${m.nota}</div>
+      </div>`;
+    list.appendChild(sec);
+  });
+  // open month 1 by default
+  document.getElementById('tm1').classList.add('op');
+}
+function toggleTreino(id){document.getElementById(id).classList.toggle('op');}
+
+// ════════════ RENDER MATERIAS ════════════
+function renderMats(){
+  const list=document.getElementById('mat-list');
+  const prRows=document.getElementById('prog-rows');
+  list.innerHTML='';prRows.innerHTML='';
+  MATS.forEach(m=>{
+    const pr=document.createElement('div');pr.className='prog-row';
+    pr.innerHTML=`<span class="prog-name">${m.name}</span><div class="prog-track"><div class="prog-fill" style="width:${m.prog}%;background:${m.color}"></div></div><span class="prog-pct">${m.prog}%</span>`;
+    prRows.appendChild(pr);
+    const sec=document.createElement('div');sec.className='mat-section';
+    sec.innerHTML=`<div class="mat-hdr" onclick="toggleMat('m${m.id}')"><div class="mat-dot" style="background:${m.color}"></div><div class="mat-title" style="color:${m.color}">${m.name}</div><div class="mat-freq">${m.freq} · ${m.qs}q/prova</div><div class="mat-q">${m.qs}q</div></div><div class="mat-body" id="m${m.id}"><div class="topics-g">${m.topics.map(t=>`<div class="topic"><span style="flex:1;color:var(--cream-dim);font-size:.59rem">${t.n}</span><div class="tbar"><div class="tbar-f" style="width:${t.f*10}%;background:${m.color}"></div></div><span class="tfreq">${t.f}/10</span></div>`).join('')}</div></div>`;
+    list.appendChild(sec);
+  });
+}
+function toggleMat(id){document.getElementById(id).classList.toggle('op');}
+
+// ════════════ RENDER INGREDIENTES ════════════
+function renderIngs(){
+  const c=document.getElementById('ing-chips');
+  c.innerHTML=ings.map((i,idx)=>`<span class="chip ${i.t}" onclick="removeIng(${idx})" title="remover">${i.n}</span>`).join('');
+}
+function removeIng(idx){ings.splice(idx,1);renderIngs();}
+function addIng(){
+  const v=document.getElementById('ing-input').value.trim();
+  if(v){ings.push({n:v,t:'carb'});document.getElementById('ing-input').value='';renderIngs();}
+}
+document.getElementById('ing-input')?.addEventListener('keydown',e=>{if(e.key==='Enter')addIng();});
+
+// ════════════ DIARY ════════════
+function toggleDiary(){
+  const b=document.getElementById('diary-body');const ch=document.getElementById('diary-ch');
+  b.classList.toggle('op');ch.textContent=b.classList.contains('op')?'▲':'▼';
+  if(b.classList.contains('op'))renderDiary();
+}
+function toggleSR(){
+  const b=document.getElementById('sr-body');const ch=document.getElementById('sr-ch');
+  b.classList.toggle('op');ch.textContent=b.classList.contains('op')?'▲':'▼';
+}
+function renderDiary(){
+  const container=document.getElementById('obs-compiled');container.innerHTML='';
+  let count=0;
+  DAYS.forEach(day=>{
+    day.blocks.forEach(b=>{
+      if(!b.obs||!b.flagId)return;
+      const st=storage[b.flagId]||{};
+      const card=document.createElement('div');card.className='obs-card';
+      card.innerHTML=`<div class="obs-card-day">${day.name}</div><div class="obs-card-blk">${b.l}</div><div class="obs-card-text ${st.obs?'':'empty'}">${st.obs||'sem observação'}</div>${st.done?'<div style="font-size:.5rem;color:var(--green);margin-top:3px">✓ concluído</div>':(st.skip?'<div style="font-size:.5rem;color:var(--amber);margin-top:3px">— pulado</div>':'')}`;
+      container.appendChild(card);
+      if(st.obs)count++;
+    });
+  });
+  document.getElementById('diary-count').textContent=`${count} obs registradas`;
+}
+function generateCompile(){
+  let lines=[`=== COMPILAÇÃO SEMANAL — ${new Date().toLocaleDateString('pt-BR')} ===\n`];
+  DAYS.forEach(day=>{
+    let dl=[];
+    day.blocks.forEach(b=>{
+      if(!b.flagId)return;
+      const st=storage[b.flagId]||{};
+      const s=st.done?'[✓]':st.skip?'[—]':'[ ]';
+      dl.push(`  ${s} ${b.l}`);
+      if(st.obs)dl.push(`    → ${st.obs}`);
+    });
+    if(dl.length){lines.push(`\n── ${day.name.toUpperCase()} ──`);lines.push(...dl);}
+  });
+  const sg=document.getElementById('sr-good').value;
+  const sb=document.getElementById('sr-bad').value;
+  const sn=document.getElementById('sr-next').value;
+  const se=document.getElementById('sr-energy').value;
+  if(sg||sb||sn||se){
+    lines.push('\n── AUTOANÁLISE ──');
+    if(sg)lines.push(`Funcionou: ${sg}`);
+    if(sb)lines.push(`Travou: ${sb}`);
+    if(sn)lines.push(`Ajuste: ${sn}`);
+    if(se)lines.push(`Energia: ${se}`);
+  }
+  const t=lines.join('\n');
+  const el=document.getElementById('compile-text');
+  el.textContent=t||'Sem dados.';el.classList.remove('empty');
+  renderDiary();
+}
+function copyCompile(){
+  const text=document.getElementById('compile-text').textContent;
+  if(navigator.clipboard)navigator.clipboard.writeText(text);
+  else{const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}
+  alert('Copiado! Cole no NotebookLM ou aqui numa nova conversa.');
+}
+function clearWeek(){
+  if(!confirm('Limpar todas as flags e observações?'))return;
+  Object.keys(storage).forEach(k=>{storage[k]={done:false,skip:false,obs:''};});
+  ['sr-good','sr-bad','sr-next','sr-energy'].forEach(id=>{document.getElementById(id).value='';});
+  document.getElementById('compile-text').textContent='Sem observações.';
+  document.getElementById('compile-text').classList.add('empty');
+  renderWeek();renderDiary();
+}
+
+// ════════════ TABS ════════════
+function tab(id,el){
+  document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('v-'+id).classList.add('on');
+  if (id === 'caderno') { loadCadState(); renderCaderno(); }
+  if (id === 'conteudo') { loadConteudoState(); renderConteudo(); }
+}
+
+// ════════════ CLOCK ════════════
+let ckInt=null,ckRun=false,ckTotal=25*60,ckRemain=25*60,ckLabel='BLOCO 1 — CONTEÚDO NOVO';
+function ckDisp(){
+  const m=Math.floor(ckRemain/60),s=ckRemain%60;
+  document.getElementById('ck-m').textContent=String(m).padStart(2,'0');
+  document.getElementById('ck-s').textContent=String(s).padStart(2,'0');
+  document.getElementById('ck-phase').textContent=ckLabel;
+}
+function ckToggle(){
+  if(ckRun){clearInterval(ckInt);ckRun=false;document.getElementById('ck-btn').textContent='▶ Continuar';}
+  else{ckRun=true;document.getElementById('ck-btn').textContent='⏸ Pausar';
+    ckInt=setInterval(()=>{if(ckRemain>0){ckRemain--;ckDisp();}else{clearInterval(ckInt);ckRun=false;document.getElementById('ck-btn').textContent='▶ Iniciar';}},1000);}
+}
+function ckReset(){clearInterval(ckInt);ckRun=false;ckRemain=ckTotal;document.getElementById('ck-btn').textContent='▶ Iniciar';ckDisp();}
+function ckSkip(){clearInterval(ckInt);ckRun=false;ckRemain=0;document.getElementById('ck-btn').textContent='▶ Iniciar';ckDisp();}
+function ckSet(mins,label,btn){
+  clearInterval(ckInt);ckRun=false;ckTotal=mins*60;ckRemain=ckTotal;ckLabel=label;
+  document.getElementById('ck-btn').textContent='▶ Iniciar';
+  document.querySelectorAll('.sbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');ckDisp();
+}
+
+// ════════════ LIVE CLOCK + COUNTDOWN ════════════
+function updateClocks(){
+  const now=new Date();
+  // live clock
+  const hh=String(now.getHours()).padStart(2,'0');
+  const mm=String(now.getMinutes()).padStart(2,'0');
+  const ss=String(now.getSeconds()).padStart(2,'0');
+  document.getElementById('live-clock').textContent=hh+':'+mm+':'+ss;
+  document.getElementById('bbar-t').textContent=hh+':'+mm;
+
+  // live date
+  const opts={weekday:'long',day:'numeric',month:'long',year:'numeric'};
+  document.getElementById('live-date').textContent=now.toLocaleDateString('pt-BR',opts).toUpperCase();
+
+  // fuvest countdown
+  const fuvest=new Date('2026-11-22T07:00:00');
+  const diff=fuvest-now;
+  if(diff>0){
+    const td=Math.floor(diff/(1000*60*60*24));
+    const th=Math.floor((diff%(1000*60*60*24))/(1000*60*60));
+    const tm=Math.floor((diff%(1000*60*60))/(1000*60));
+    const ts=Math.floor((diff%(1000*60))/1000);
+    document.getElementById('cd-d').textContent=String(td).padStart(3,'0');
+    document.getElementById('cd-h').textContent=String(th).padStart(2,'0');
+    document.getElementById('cd-m').textContent=String(tm).padStart(2,'0');
+    document.getElementById('cd-s').textContent=String(ts).padStart(2,'0');
+    document.getElementById('days-left').textContent=td;
+    document.getElementById('weeks-left').textContent=Math.floor(td/7);
+  }
+}
+
+setInterval(updateClocks,1000);
+updateClocks();
+// re-render week every minute so current-block highlight stays accurate
+setInterval(renderWeek,60000);
+
+
+// ════════════════════════════════════════════════════════
+// CONTEÚDO DATA — Sequência cronológica por matéria
+// Livros mapeados de ff3c4acb-871b-4150-b51c-667830983e58
+// freq: 'must'=10/10, 'high'=7-9/10, 'med'=3-6/10
+// ex: número de exercícios calibrado por complexidade
+// minScore: 0.8 = 80% mínimo para aprovação
+// ════════════════════════════════════════════════════════
+
+const CONTEUDO_DATA = [
+
+  // ════════════════════════════════════════════════════
+  // MATEMÁTICA — Iezzi et al. "Ciência e Aplicações" (Saraiva)
+  // ════════════════════════════════════════════════════
+  {
+    id: 'mat', name: 'Matemática', color: '#2563eb', q: '12–13q', diasSemana: [0,3,6], // seg, qui, dom
+    topicos: [
+      // BLOCO 1 — Funções (Vol.1 Iezzi)
+      { id:'mat-01', fase:1, bloco:'Funções — Base',
+        nome:'Funções: definição, domínio, imagem, gráfico',
+        detalhe:'Conceito de função, relação, correspondência. Domínio, contradomínio, imagem. Notação f(x). Gráfico no plano cartesiano.',
+        livro:'Iezzi Vol. 1', cap:'Cap. 3–4', freq:'must', ex:20, minScore:0.8,
+        nota:'Pré-requisito absoluto. Sem isso nada mais fecha.' },
+      { id:'mat-02', fase:1, bloco:'Funções — Base',
+        nome:'Função afim (1º grau): gráfico, zero, coeficientes',
+        detalhe:'f(x)=ax+b. Coeficiente angular e linear. Zero da função. Crescimento e decrescimento. Inequação do 1º grau.',
+        livro:'Iezzi Vol. 1', cap:'Cap. 5', freq:'must', ex:25, minScore:0.8,
+        nota:'Aparece embutida em outras questões. Dominar bem.' },
+      { id:'mat-03', fase:1, bloco:'Funções — Base',
+        nome:'Função quadrática (2º grau): parábola, vértice, discriminante',
+        detalhe:'f(x)=ax²+bx+c. Fórmula de Bhaskara. Vértice. Forma fatorada. Gráfico. Inequação do 2º grau. Problemas de máximo e mínimo.',
+        livro:'Iezzi Vol. 1', cap:'Cap. 6–7', freq:'must', ex:30, minScore:0.8,
+        nota:'Uma das mais cobradas. Mínimo 3 questões resolvidas por semana neste tópico.' },
+      { id:'mat-04', fase:1, bloco:'Funções — Base',
+        nome:'Função modular |x|: gráfico, equações e inequações',
+        detalhe:'Definição de módulo. Gráfico de f(x)=|ax+b|. Equações com módulo. Inequações com módulo. Transformações gráficas.',
+        livro:'Iezzi Vol. 1', cap:'Cap. 8', freq:'must', ex:25, minScore:0.8,
+        nota:'Frequência crescente 2022–2026. Gráfico de módulo aparece todo ano.' },
+      { id:'mat-05', fase:1, bloco:'Funções — Base',
+        nome:'Funções compostas e inversas',
+        detalhe:'Composição f∘g. Função inversa f⁻¹. Condição de existência. Gráfico da inversa (reflexão em y=x).',
+        livro:'Iezzi Vol. 1', cap:'Cap. 9', freq:'high', ex:15, minScore:0.8,
+        nota:'Aparece junto com exponencial e logaritmo. Estudar antes dos dois.' },
+
+      // BLOCO 2 — Exponencial e Logaritmo (Vol.2 Iezzi)
+      { id:'mat-06', fase:1, bloco:'Exponencial e Logaritmo',
+        nome:'Potenciação e radiciação — revisão',
+        detalhe:'Propriedades das potências. Raiz n-ésima. Potência com expoente racional. Racionalização.',
+        livro:'Iezzi Vol. 2', cap:'Cap. 1', freq:'must', ex:15, minScore:0.8,
+        nota:'Revisão rápida — pré-requisito para log. Máximo 2 sessões.' },
+      { id:'mat-07', fase:1, bloco:'Exponencial e Logaritmo',
+        nome:'Função exponencial: definição, gráfico, crescimento/decaimento',
+        detalhe:'f(x)=aˣ. Base maior e menor que 1. Crescimento e decrescimento. Assíntota. Aplicações: juros, população, meia-vida.',
+        livro:'Iezzi Vol. 2', cap:'Cap. 2', freq:'must', ex:20, minScore:0.8,
+        nota:'Sempre contextualizada (radioatividade, crescimento populacional).' },
+      { id:'mat-08', fase:1, bloco:'Exponencial e Logaritmo',
+        nome:'Logaritmos: definição, propriedades, mudança de base',
+        detalhe:'Definição log_a(b)=x. Propriedades: log do produto, quociente, potência. Mudança de base. Log natural. Log decimal.',
+        livro:'Iezzi Vol. 2', cap:'Cap. 3', freq:'must', ex:30, minScore:0.8,
+        nota:'9/10 anos. Propriedades são a base de todas as questões de log.' },
+      { id:'mat-09', fase:1, bloco:'Exponencial e Logaritmo',
+        nome:'Equações e inequações exponenciais e logarítmicas',
+        detalhe:'Equações do tipo aˣ=b. Redução à mesma base. Inequações exponenciais. Equações logarítmicas. Condição de existência do log.',
+        livro:'Iezzi Vol. 2', cap:'Cap. 4', freq:'must', ex:30, minScore:0.8,
+        nota:'Ponto mais cobrado do bloco. Mínimo 30 exercícios com variação.' },
+
+      // BLOCO 3 — Progressões (Vol.2 Iezzi)
+      { id:'mat-10', fase:1, bloco:'Progressões',
+        nome:'Progressão Aritmética (PA): termo geral, soma, interpolação',
+        detalhe:'Definição e razão. Termo geral an=a1+(n-1)r. Soma dos n primeiros termos. Interpolação aritmética. PA finita e infinita.',
+        livro:'Iezzi Vol. 2', cap:'Cap. 5', freq:'must', ex:25, minScore:0.8,
+        nota:'10/10 anos. Frequentemente combinada com geometria e contagem.' },
+      { id:'mat-11', fase:1, bloco:'Progressões',
+        nome:'Progressão Geométrica (PG): razão, soma, produto, infinita',
+        detalhe:'Definição e razão. Termo geral an=a1·qⁿ⁻¹. Soma dos n termos. PG infinita convergente (|q|<1). Interpolação geométrica.',
+        livro:'Iezzi Vol. 2', cap:'Cap. 6–7', freq:'must', ex:25, minScore:0.8,
+        nota:'Dízima periódica como PG infinita — clássico FUVEST.' },
+
+      // BLOCO 4 — Trigonometria (Vol.3 Iezzi)
+      { id:'mat-12', fase:2, bloco:'Trigonometria',
+        nome:'Trigonometria no triângulo retângulo: sen, cos, tan',
+        detalhe:'Definições no triângulo retângulo. Triângulos notáveis (30-60-90, 45-45-90). Relações métricas no triângulo retângulo. Teorema de Pitágoras reforço.',
+        livro:'Iezzi Vol. 3', cap:'Cap. 1–2', freq:'must', ex:20, minScore:0.8,
+        nota:'Base da trigonometria. Sem isso lei dos senos e cossenos não funciona.' },
+      { id:'mat-13', fase:2, bloco:'Trigonometria',
+        nome:'Círculo trigonométrico: arco, radiano, quadrantes, sinais',
+        detalhe:'Círculo unitário. Conversão grau-radiano. Seno, cosseno e tangente em qualquer quadrante. Arcos associados. Simetrias.',
+        livro:'Iezzi Vol. 3', cap:'Cap. 3', freq:'must', ex:20, minScore:0.8,
+        nota:'Ponte entre triângulo e funções trig. Não pular.' },
+      { id:'mat-14', fase:2, bloco:'Trigonometria',
+        nome:'Funções trigonométricas: gráfico, período, amplitude, fase',
+        detalhe:'Gráfico de sen(x), cos(x), tan(x). Período e amplitude. Transformações: f(x)=A·sen(Bx+C)+D. Zeros e extremos. Leitura de gráfico.',
+        livro:'Iezzi Vol. 3', cap:'Cap. 4–5', freq:'must', ex:25, minScore:0.8,
+        nota:'FUVEST adora dar gráfico e pedir parâmetros ou vice-versa.' },
+      { id:'mat-15', fase:2, bloco:'Trigonometria',
+        nome:'Identidades trigonométricas e equações',
+        detalhe:'Identidade fundamental sen²+cos²=1. Identidades derivadas. Equações trigonométricas simples. Resolução no círculo.',
+        livro:'Iezzi Vol. 3', cap:'Cap. 5–6', freq:'high', ex:20, minScore:0.8,
+        nota:'Aparece embutida. Saber as identidades de cabeça.' },
+      { id:'mat-16', fase:2, bloco:'Trigonometria',
+        nome:'Lei dos senos e cossenos: triângulos quaisquer',
+        detalhe:'Lei dos senos. Lei dos cossenos. Área do triângulo com sen. Resolução de triângulos. Problemas contextualizados.',
+        livro:'Iezzi Vol. 3', cap:'Cap. 7', freq:'high', ex:20, minScore:0.8,
+        nota:'7/10 anos. Sempre com contexto real (topografia, navegação).' },
+
+      // BLOCO 5 — Geometria Plana (Vol.4 Iezzi)
+      { id:'mat-17', fase:2, bloco:'Geometria Plana',
+        nome:'Triângulos: semelhança, área, relações métricas, Pitágoras',
+        detalhe:'Critérios de semelhança (AA, LAL, LLL). Razão de semelhança e razão de áreas. Área = base×altura/2. Relações métricas no triângulo retângulo. Teorema de Pitágoras e recíproca.',
+        livro:'Iezzi Vol. 4', cap:'Cap. 1–3', freq:'must', ex:30, minScore:0.8,
+        nota:'Presente em absolutamente todos os anos. Mais exercícios aqui.' },
+      { id:'mat-18', fase:2, bloco:'Geometria Plana',
+        nome:'Quadriláteros: paralelogramo, trapézio, losango, retângulo',
+        detalhe:'Propriedades de cada quadrilátero. Áreas. Diagonais. Problemas de perímetro e área em contexto.',
+        livro:'Iezzi Vol. 4', cap:'Cap. 4', freq:'must', ex:20, minScore:0.8,
+        nota:'Sempre contextualizado. FUVEST nunca cobra definição pura.' },
+      { id:'mat-19', fase:2, bloco:'Geometria Plana',
+        nome:'Círculo e circunferência: arco, setor, segmento, inscrição',
+        detalhe:'Comprimento de arco. Área de setor circular. Relações entre corda, arco e ângulo central. Polígonos inscritos e circunscritos.',
+        livro:'Iezzi Vol. 4', cap:'Cap. 5–6', freq:'must', ex:25, minScore:0.8,
+        nota:'Arco e setor são os mais cobrados do bloco de círculo.' },
+      { id:'mat-20', fase:2, bloco:'Geometria Plana',
+        nome:'Polígonos regulares e sua relação com círculos',
+        detalhe:'Ângulos internos e externos. Diagonal. Apótema. Área. Hexágono regular (base para geo. espacial).',
+        livro:'Iezzi Vol. 4', cap:'Cap. 7', freq:'high', ex:15, minScore:0.8,
+        nota:'Hexágono aparece frequentemente em sólidos e pavimentações.' },
+
+      // BLOCO 6 — Geometria Espacial (Vol.5 Iezzi)
+      { id:'mat-21', fase:3, bloco:'Geometria Espacial',
+        nome:'Prismas: volume, área lateral, área total',
+        detalhe:'Prisma reto e oblíquo. Classificação (triangular, quadrangular, hexagonal). Volume = área base × altura. Área lateral e total.',
+        livro:'Iezzi Vol. 5', cap:'Cap. 1–2', freq:'must', ex:25, minScore:0.8,
+        nota:'Mais cobrado de toda a geometria junto com cilindro.' },
+      { id:'mat-22', fase:3, bloco:'Geometria Espacial',
+        nome:'Cilindro: volume, área lateral, área total',
+        detalhe:'Cilindro reto. Volume = πr²h. Área lateral = 2πrh. Área total. Planificação do cilindro.',
+        livro:'Iezzi Vol. 5', cap:'Cap. 3', freq:'must', ex:20, minScore:0.8,
+        nota:'FUVEST adora cilindro com contexto (embalagem, tanque, cano).' },
+      { id:'mat-23', fase:3, bloco:'Geometria Espacial',
+        nome:'Pirâmides e cones: volume, área, frustos',
+        detalhe:'Pirâmide: volume = (1/3)·base·altura. Cone: volume = (1/3)πr²h. Área lateral do cone = πrl. Frustos (tronco de pirâmide e cone).',
+        livro:'Iezzi Vol. 5', cap:'Cap. 4–5', freq:'must', ex:25, minScore:0.8,
+        nota:'Frustos são questões de alto nível. Treinar com cuidado.' },
+      { id:'mat-24', fase:3, bloco:'Geometria Espacial',
+        nome:'Esfera: volume, área, esferas inscritas/circunscritas',
+        detalhe:'Volume = (4/3)πr³. Área = 4πr². Esfera inscrita no cubo, no cilindro. Problema de seção.',
+        livro:'Iezzi Vol. 5', cap:'Cap. 6', freq:'high', ex:20, minScore:0.8,
+        nota:'Esfera inscrita em cubo ou cilindro é recorrente.' },
+      { id:'mat-25', fase:3, bloco:'Geometria Espacial',
+        nome:'Sólidos compostos, planificação e problemas contextualizados',
+        detalhe:'Combinação de sólidos. Planificação de embalagens. Problema de otimização de material (menos desperdício).',
+        livro:'Iezzi Vol. 5', cap:'Cap. 7–8', freq:'high', ex:20, minScore:0.8,
+        nota:'Nível craque — aparece nas questões 80-90 da prova.' },
+
+      // BLOCO 7 — Geometria Analítica (Vol.6 Iezzi)
+      { id:'mat-26', fase:3, bloco:'Geometria Analítica',
+        nome:'Ponto no plano: distância, ponto médio, divisão interna',
+        detalhe:'Distância entre dois pontos. Ponto médio. Divisão interna e externa. Baricentro do triângulo.',
+        livro:'Iezzi Vol. 6', cap:'Cap. 1', freq:'must', ex:15, minScore:0.8,
+        nota:'Fundamento. Rápido de aprender, não pular.' },
+      { id:'mat-27', fase:3, bloco:'Geometria Analítica',
+        nome:'Reta: equação, coeficientes, posições relativas',
+        detalhe:'Equação geral, reduzida e paramétrica. Coeficiente angular (inclinação). Paralelismo e perpendicularismo. Distância ponto-reta. Intersecção de retas.',
+        livro:'Iezzi Vol. 6', cap:'Cap. 2–3', freq:'must', ex:25, minScore:0.8,
+        nota:'9/10 anos. Coeficiente angular e distância ponto-reta são os mais cobrados.' },
+      { id:'mat-28', fase:3, bloco:'Geometria Analítica',
+        nome:'Circunferência: equação, posição de ponto e reta',
+        detalhe:'Equação reduzida e geral. Centro e raio. Posição de ponto em relação à circunferência. Posição de reta (secante, tangente, externa). Equação da tangente.',
+        livro:'Iezzi Vol. 6', cap:'Cap. 4', freq:'must', ex:25, minScore:0.8,
+        nota:'8/10 anos. Reta tangente à circunferência é questão recorrente.' },
+      { id:'mat-29', fase:3, bloco:'Geometria Analítica',
+        nome:'Área por coordenadas e cônicas (elipse, parábola, hipérbole)',
+        detalhe:'Fórmula de Gauss para área. Elipse: equação, focos, excentricidade. Parábola com foco. Hipérbole básica.',
+        livro:'Iezzi Vol. 6', cap:'Cap. 5–6', freq:'med', ex:15, minScore:0.8,
+        nota:'Cônicas aparecem 4/10. Saber reconhecer e trabalhar com elipse.' },
+
+      // BLOCO 8 — Combinatória e Probabilidade (Vol.7 Iezzi)
+      { id:'mat-30', fase:4, bloco:'Combinatória e Probabilidade',
+        nome:'Princípio multiplicativo e permutações',
+        detalhe:'Princípio fundamental da contagem. Permutação simples. Permutação com repetição. Permutação circular. Anagramas.',
+        livro:'Iezzi Vol. 7', cap:'Cap. 1–2', freq:'must', ex:25, minScore:0.8,
+        nota:'10/10 anos. Anagrama e arranjos em fila são os mais frequentes.' },
+      { id:'mat-31', fase:4, bloco:'Combinatória e Probabilidade',
+        nome:'Arranjos e combinações: C(n,k), problemas de seleção',
+        detalhe:'Arranjo simples A(n,p). Combinação simples C(n,p)=n!/(p!(n-p)!). Diferença entre arranjo e combinação. Problemas de escolha de comissão, grupo.',
+        livro:'Iezzi Vol. 7', cap:'Cap. 3', freq:'must', ex:30, minScore:0.8,
+        nota:'Saber quando usar arranjo vs combinação é a habilidade principal.' },
+      { id:'mat-32', fase:4, bloco:'Combinatória e Probabilidade',
+        nome:'Probabilidade: espaço amostral, eventos, regras',
+        detalhe:'Definição clássica. Espaço amostral. Evento complementar. Probabilidade da união (adição). Probabilidade condicional. Eventos independentes. Probabilidade da interseção.',
+        livro:'Iezzi Vol. 7', cap:'Cap. 4–5', freq:'must', ex:30, minScore:0.8,
+        nota:'FUVEST adora urna, baralho e dados. Treinar muito esses contextos.' },
+
+      // BLOCO 9 — Matrizes e Sistemas (Vol.7 Iezzi)
+      { id:'mat-33', fase:4, bloco:'Matrizes e Sistemas',
+        nome:'Matrizes: operações, tipos, determinante',
+        detalhe:'Tipos de matrizes. Soma, subtração, multiplicação. Matriz inversa. Determinante 2×2 e 3×3 (Regra de Sarrus).',
+        livro:'Iezzi Vol. 7', cap:'Cap. 6', freq:'med', ex:20, minScore:0.8,
+        nota:'6/10 anos (a cada 2 anos). Importante mas não prioridade máxima.' },
+      { id:'mat-34', fase:4, bloco:'Matrizes e Sistemas',
+        nome:'Sistemas lineares: Cramer, classificação, escalonamento',
+        detalhe:'Sistema 2×2 e 3×3. Regra de Cramer. Escalonamento. Classificação: possível e determinado, possível e indeterminado, impossível.',
+        livro:'Iezzi Vol. 7', cap:'Cap. 7', freq:'med', ex:15, minScore:0.8,
+        nota:'Aparece junto com matrizes. Estudar no mesmo bloco.' },
+    ]
+  },
+
+  // ════════════════════════════════════════════════════
+  // BIOLOGIA — Linhares & Gewandsznajder "Biologia Hoje" (Ática)
+  // ════════════════════════════════════════════════════
+  {
+    id: 'bio', name: 'Biologia', color: '#065f46', q: '12q', diasSemana: [2,4], // qua, sex
+    topicos: [
+      // BLOCO 1 — Evolução (Vol.2 Linhares)
+      { id:'bio-01', fase:1, bloco:'Evolução — Eixo Estruturante',
+        nome:'Darwin e Wallace: seleção natural, fitness, pressão seletiva',
+        detalhe:'Variação intraespecífica. Superprodução de descendentes. Seleção natural. Sobrevivência do mais apto. Pressão do ambiente. Diferença de Lamarck.',
+        livro:'Linhares Vol. 2', cap:'Cap. 11–12', freq:'must', ex:20, minScore:0.8,
+        nota:'Eixo da prova. FUVEST usa evolução para contextualizar genética, ecologia e biotecnologia.' },
+      { id:'bio-02', fase:1, bloco:'Evolução — Eixo Estruturante',
+        nome:'Evidências da evolução: fósseis, anatomia comparada, biogeografia, molecular',
+        detalhe:'Registro fóssil e datação. Órgãos homólogos e análogos. Órgãos vestigiais. Biogeografia. Sequenciamento de DNA como evidência.',
+        livro:'Linhares Vol. 2', cap:'Cap. 13', freq:'must', ex:15, minScore:0.8,
+        nota:'FUVEST adora usar evidências como contexto de questões interdisciplinares.' },
+      { id:'bio-03', fase:1, bloco:'Evolução — Eixo Estruturante',
+        nome:'Especiação: isolamento reprodutivo, alopátrica, simpátrica',
+        detalhe:'Conceito biológico de espécie. Isolamento geográfico. Especiação alopátrica e simpátrica. Poliploidia em plantas. Deriva genética e efeito fundador.',
+        livro:'Linhares Vol. 2', cap:'Cap. 14', freq:'must', ex:15, minScore:0.8,
+        nota:'Derivação genética e efeito fundador aparecem contextualizados em FUVEST.' },
+      { id:'bio-04', fase:1, bloco:'Evolução — Eixo Estruturante',
+        nome:'Filogenia e cladística: cladogramas, grupos monofiléticos',
+        detalhe:'Árvore filogenética. Como ler um cladograma. Caracteres compartilhados derivados. Grupo monofilético, parafilético, polifilético.',
+        livro:'Linhares Vol. 2', cap:'Cap. 15', freq:'high', ex:15, minScore:0.8,
+        nota:'Cladograma aparece em 7/10 anos. Saber ler é suficiente.' },
+      { id:'bio-05', fase:1, bloco:'Evolução — Eixo Estruturante',
+        nome:'Evolução humana: Homo sapiens, ancestrais, fora da África',
+        detalhe:'Hominídeos: Australopithecus, Homo habilis, H. erectus, H. sapiens. Hipótese fora da África. Cervão e bipedalismo. Evolução cultural.',
+        livro:'Linhares Vol. 2', cap:'Cap. 16', freq:'high', ex:10, minScore:0.8,
+        nota:'Contexto frequente para questões de genética populacional.' },
+
+      // BLOCO 2 — Genética (Vol.2 Linhares)
+      { id:'bio-06', fase:1, bloco:'Genética',
+        nome:'Leis de Mendel: 1ª lei, monoibridismo, heredograma',
+        detalhe:'Dominância e recessividade. Fenótipo e genótipo. Cruzamento monohíbrido. Quadro de Punnett. Leitura de heredograma. Probabilidade em genética.',
+        livro:'Linhares Vol. 2', cap:'Cap. 1–2', freq:'must', ex:25, minScore:0.8,
+        nota:'Base. Heredograma é a habilidade mais cobrada de toda a genética.' },
+      { id:'bio-07', fase:1, bloco:'Genética',
+        nome:'2ª lei de Mendel: diibridismo, segregação independente',
+        detalhe:'Cruzamento dihíbrido. Proporção 9:3:3:1. Qui-quadrado básico. Condições para a 2ª lei (genes em cromossomos diferentes).',
+        livro:'Linhares Vol. 2', cap:'Cap. 3', freq:'must', ex:20, minScore:0.8,
+        nota:'Aparece combinado com ligação gênica em questões mais difíceis.' },
+      { id:'bio-08', fase:1, bloco:'Genética',
+        nome:'Dominância incompleta, codominância e alelos múltiplos',
+        detalhe:'Dominância incompleta: proporção 1:2:1. Codominância: grupos sanguíneos ABO. Sistema MN. Alelos múltiplos: série de dominância.',
+        livro:'Linhares Vol. 2', cap:'Cap. 4', freq:'must', ex:20, minScore:0.8,
+        nota:'Grupos sanguíneos ABO aparecem em 8/10 anos.' },
+      { id:'bio-09', fase:1, bloco:'Genética',
+        nome:'Herança ligada ao sexo: herança ligada ao X (daltonismo, hemofilia)',
+        detalhe:'Cromossomos sexuais XX e XY. Genes ligados ao X. Herança recessiva ligada ao X. Heredograma com daltonismo e hemofilia. Herança holândrica.',
+        livro:'Linhares Vol. 2', cap:'Cap. 5', freq:'must', ex:25, minScore:0.8,
+        nota:'10/10 anos. Heredograma de hemofilia e daltonismo é clássico.' },
+      { id:'bio-10', fase:1, bloco:'Genética',
+        nome:'Ligação gênica e crossing-over: mapa genético',
+        detalhe:'Genes ligados (no mesmo cromossomo). Frequência de recombinação. Centimorgan. Crossing-over e recombinação. Construção de mapa genético.',
+        livro:'Linhares Vol. 2', cap:'Cap. 6', freq:'high', ex:20, minScore:0.8,
+        nota:'Frequência de recombinação + mapa genético aparecem em questões difíceis.' },
+      { id:'bio-11', fase:1, bloco:'Genética',
+        nome:'Epistasia, interação gênica e pleiotropia',
+        detalhe:'Epistasia dominante e recessiva. Proporções modificadas. Pleiotropia: um gene, vários efeitos. Genes complementares.',
+        livro:'Linhares Vol. 2', cap:'Cap. 7', freq:'high', ex:15, minScore:0.8,
+        nota:'Aparece em questões de nível avançado (últimas da prova).' },
+      { id:'bio-12', fase:2, bloco:'Genética',
+        nome:'Mutações: gênicas, cromossômicas numéricas e estruturais',
+        detalhe:'Mutação gênica: troca de base, inserção, deleção. Mutação cromossômica numérica: monossomia, trissomia (Sínd. Down, Turner, Klinefelter). Estruturais: deleção, duplicação, inversão, translocação.',
+        livro:'Linhares Vol. 2', cap:'Cap. 8–9', freq:'must', ex:20, minScore:0.8,
+        nota:'Síndrome de Down aparece em 8/10 anos no contexto de mutações.' },
+
+      // BLOCO 3 — Ecologia (Vol.3 Linhares)
+      { id:'bio-13', fase:2, bloco:'Ecologia',
+        nome:'Cadeias e teias alimentares: níveis tróficos, pirâmides',
+        detalhe:'Produtor, consumidor primário, secundário, decompositores. Pirâmide de números, biomassa e energia. Eficiência ecológica (10%). Fluxo de energia.',
+        livro:'Linhares Vol. 3', cap:'Cap. 1–2', freq:'must', ex:15, minScore:0.8,
+        nota:'Base de toda ecologia. Pirâmide de energia (sempre diminui) é regra.' },
+      { id:'bio-14', fase:2, bloco:'Ecologia',
+        nome:'Ciclos biogeoquímicos: C, N, P, H₂O',
+        detalhe:'Ciclo do carbono (fotossíntese, respiração, combustão, calcinação). Ciclo do nitrogênio (fixação, nitrificação, desnitrificação). Ciclo do fósforo. Ciclo da água (evapotranspiração).',
+        livro:'Linhares Vol. 3', cap:'Cap. 3', freq:'must', ex:15, minScore:0.8,
+        nota:'Ciclo do nitrogênio é o mais cobrado. FUVEST usa em contexto ambiental.' },
+      { id:'bio-15', fase:2, bloco:'Ecologia',
+        nome:'Relações ecológicas: mutualismo, parasitismo, predação, comensalismo',
+        detalhe:'Relações intraespecíficas: colônias, sociedades, canibalismo. Interespecíficas: parasitismo, mutualismo, predação, comensalismo, amensalismo, competição.',
+        livro:'Linhares Vol. 3', cap:'Cap. 4', freq:'must', ex:15, minScore:0.8,
+        nota:'FUVEST contextualiza com exemplos concretos (liquen, cupim, rêmora).' },
+      { id:'bio-16', fase:2, bloco:'Ecologia',
+        nome:'Sucessão ecológica: primária, secundária, clímax',
+        detalhe:'Sucessão primária (rocha nua). Sucessão secundária (área perturbada). Comunidade clímax. Espécies pioneiras e tardias. Recuperação de áreas.',
+        livro:'Linhares Vol. 3', cap:'Cap. 5', freq:'high', ex:10, minScore:0.8,
+        nota:'Contexto frequente: incêndio, desmatamento, recuperação de manguezal.' },
+      { id:'bio-17', fase:2, bloco:'Ecologia',
+        nome:'Biomas brasileiros: Amazônia, Cerrado, Caatinga, Mata Atlântica',
+        detalhe:'Características climáticas, flora e fauna de cada bioma. Ameaças e pressões. Espécies endêmicas. Mata ciliar e APP. Pantanal e Pampa.',
+        livro:'Linhares Vol. 3', cap:'Cap. 6–7', freq:'must', ex:15, minScore:0.8,
+        nota:'Biomas aparecem em Bio E em Geografia simultaneamente. Alto valor.' },
+      { id:'bio-18', fase:2, bloco:'Ecologia',
+        nome:'Impactos ambientais: desmatamento, efeito estufa, extinção',
+        detalhe:'Desmatamento e perda de biodiversidade. Gases estufa (CO₂, CH₄, N₂O). Aquecimento global e consequências. Chuva ácida. Buraco na camada de ozônio.',
+        livro:'Linhares Vol. 3', cap:'Cap. 8', freq:'must', ex:10, minScore:0.8,
+        nota:'FUVEST usa muito como contexto interdisciplinar com Química e Geo.' },
+
+      // BLOCO 4 — Citologia (Vol.1 Linhares)
+      { id:'bio-19', fase:3, bloco:'Citologia e Divisão Celular',
+        nome:'Estrutura celular: membrana, organelas, núcleo',
+        detalhe:'Membrana plasmática: bicamada lipídica, proteínas, transporte (passivo, ativo). Organelas: mitocôndria, cloroplasto, retículo, complexo de Golgi, lisossomo. Núcleo: cromatina, nucléolo.',
+        livro:'Linhares Vol. 1', cap:'Cap. 1–5', freq:'high', ex:15, minScore:0.8,
+        nota:'Aparece contextualizado com função e patologia (lisossomo, mitocôndria).' },
+      { id:'bio-20', fase:3, bloco:'Citologia e Divisão Celular',
+        nome:'DNA: estrutura, replicação. RNA: tipos, transcrição, tradução',
+        detalhe:'Estrutura do DNA (dupla hélice, bases nitrogenadas, complementaridade). Replicação semiconservativa. RNA (mRNA, tRNA, rRNA). Transcrição. Código genético. Tradução (ribossomo, códon, anticódon). Mutação puntual.',
+        livro:'Linhares Vol. 1', cap:'Cap. 9–11', freq:'must', ex:20, minScore:0.8,
+        nota:'Síntese proteica + mutação gênica são o ponto mais cobrado de citologia.' },
+      { id:'bio-21', fase:3, bloco:'Citologia e Divisão Celular',
+        nome:'Mitose: fases, citocinese, ciclo celular, câncer',
+        detalhe:'Interfase (G1, S, G2). Mitose: prófase, metáfase, anáfase, telófase. Citocinese animal e vegetal. Pontos de controle do ciclo celular. Mutação e câncer.',
+        livro:'Linhares Vol. 1', cap:'Cap. 12', freq:'high', ex:15, minScore:0.8,
+        nota:'Câncer e divisão celular aparecem com frequência crescente.' },
+      { id:'bio-22', fase:3, bloco:'Citologia e Divisão Celular',
+        nome:'Meiose: fases, diferenças com mitose, gametogênese',
+        detalhe:'Meiose I e II. Crossing-over na prófase I. Produção de gametas (4 células haploides). Espermatogênese vs ovogênese. Comparação mitose/meiose.',
+        livro:'Linhares Vol. 1', cap:'Cap. 13–14', freq:'must', ex:20, minScore:0.8,
+        nota:'Meiose + genética (crossing-over) é combo clássico de questões difíceis.' },
+
+      // BLOCO 5 — Fisiologia Humana (Vol.3 Linhares)
+      { id:'bio-23', fase:3, bloco:'Fisiologia Humana',
+        nome:'Sistema digestório: enzimas, absorção, órgãos',
+        detalhe:'Da boca ao intestino. Enzimas digestivas por segmento (amilase, pepsina, lipase, tripsina). pH de cada região. Absorção no intestino delgado. Papel do fígado e pâncreas.',
+        livro:'Linhares Vol. 3', cap:'Cap. 13–14', freq:'high', ex:15, minScore:0.8,
+        nota:'pH e enzimas são o ponto mais cobrado deste sistema.' },
+      { id:'bio-24', fase:3, bloco:'Fisiologia Humana',
+        nome:'Sistema circulatório: coração, circulação, pressão, hemoglobina',
+        detalhe:'Câmaras do coração. Circulação maior e menor. Pressão sistólica/diastólica. Transporte de O₂ e CO₂ (hemoglobina e saturação). Curva de dissociação da hemoglobina.',
+        livro:'Linhares Vol. 3', cap:'Cap. 15', freq:'high', ex:15, minScore:0.8,
+        nota:'Hemoglobina e saturação de O₂ aparecem com gráfico (questão de nível A).' },
+      { id:'bio-25', fase:3, bloco:'Fisiologia Humana',
+        nome:'Sistema respiratório e excretor: mecânica, néfron, filtração',
+        detalhe:'Mecânica respiratória (inspiração/expiração). Troca gasosa nos alvéolos. Néfron: glomérulo, cápsula de Bowman, tubos. Filtração, reabsorção e excreção. Urina.',
+        livro:'Linhares Vol. 3', cap:'Cap. 16–17', freq:'high', ex:15, minScore:0.8,
+        nota:'Néfron e osmorregulação são frequentes em questões com gráfico.' },
+
+      // BLOCO 6 — Botânica (Vol.3 Linhares)
+      { id:'bio-26', fase:4, bloco:'Botânica e Bioquímica',
+        nome:'Fotossíntese: reações da luz, ciclo de Calvin, fatores limitantes',
+        detalhe:'Fase fotoquímica: fotossistemas I e II, ATP e NADPH, fotólise da água, liberação de O₂. Ciclo de Calvin: fixação do CO₂, G3P, regeneração do RuBP. Fatores limitantes: luz, CO₂, temperatura.',
+        livro:'Linhares Vol. 3', cap:'Cap. 19–20', freq:'high', ex:15, minScore:0.8,
+        nota:'Gráfico de fatores limitantes aparece com frequência crescente.' },
+      { id:'bio-27', fase:4, bloco:'Botânica e Bioquímica',
+        nome:'Respiração celular: glicólise, Krebs, cadeia respiratória, balanço ATP',
+        detalhe:'Glicólise (citoplasma): 2 ATP net. Ciclo de Krebs (mitocôndria): acetil-CoA, NADH. Cadeia respiratória: 32–34 ATP. Fermentação alcoólica e lática. Balanço total.',
+        livro:'Linhares Vol. 3', cap:'Cap. 21', freq:'high', ex:15, minScore:0.8,
+        nota:'Fermentação e rendimento energético são pontos frequentes.' },
+
+      // BLOCO 7 — Biotecnologia (Vol.2 Linhares + suplemento)
+      { id:'bio-28', fase:4, bloco:'Biotecnologia',
+        nome:'DNA recombinante, PCR, transgênicos, CRISPR',
+        detalhe:'Enzimas de restrição. Vetor plasmidial. Clonagem gênica. PCR: desnaturação, anelamento, extensão. Transgênicos: soja, milho, insulina. CRISPR-Cas9 (contexto qualitativo).',
+        livro:'Linhares Vol. 2', cap:'Cap. 10', freq:'high', ex:10, minScore:0.8,
+        nota:'CRISPR e transgênicos aparecem no contexto de ciência recente — tendência FUVEST.' },
+      { id:'bio-29', fase:4, bloco:'Biotecnologia',
+        nome:'Imunidade: anticorpos, vacinas, imunidade inata e adaptativa',
+        detalhe:'Imunidade inata (barreiras, neutrófilos, NK). Imunidade adaptativa: linfócitos B (anticorpos) e T (citotóxico). Memória imunológica. Vacinas. HIV e AIDS.',
+        livro:'Linhares Vol. 3', cap:'Cap. 22', freq:'high', ex:15, minScore:0.8,
+        nota:'Pós-COVID esse bloco ficou muito frequente. Vacina e memória imune cobrados.' },
+    ]
+  },
+
+  // ════════════════════════════════════════════════════
+  // FÍSICA — Ramalho "Os Fundamentos da Física" (Moderna)
+  // ════════════════════════════════════════════════════
+  {
+    id: 'fis', name: 'Física', color: '#c2410c', q: '9–10q', diasSemana: [1], // ter
+    topicos: [
+      { id:'fis-01', fase:1, bloco:'Mecânica',
+        nome:'Cinemática: MRU, MRUV, gráficos posição-velocidade-tempo',
+        detalhe:'Velocidade média. Aceleração média. Equações do MRUV. Queda livre. Gráficos p×t, v×t, a×t — leitura e interpretação. Lançamento vertical.',
+        livro:'Ramalho Vol. 1', cap:'Cap. 1–6', freq:'must', ex:25, minScore:0.8,
+        nota:'Gráfico de cinemática é presença garantida. Leitura de gráfico é habilidade central.' },
+      { id:'fis-02', fase:1, bloco:'Mecânica',
+        nome:'Dinâmica: Leis de Newton, força resultante, atrito, plano inclinado',
+        detalhe:'1ª lei (inércia). 2ª lei (F=ma). 3ª lei (ação-reação). Força de atrito (estático e cinético). Plano inclinado. Força normal. Tensão em cordas. Sistema de blocos.',
+        livro:'Ramalho Vol. 1', cap:'Cap. 7–12', freq:'must', ex:30, minScore:0.8,
+        nota:'Bloco mais cobrado de toda a Física. Newton em algum contexto todo ano.' },
+      { id:'fis-03', fase:1, bloco:'Mecânica',
+        nome:'Trabalho, energia cinética, potencial e conservação',
+        detalhe:'Trabalho de uma força (W=F·d·cosθ). Teorema trabalho-energia. Energia cinética (Ec=mv²/2). Energia potencial gravitacional (Ep=mgh). Conservação de energia. Potência.',
+        livro:'Ramalho Vol. 1', cap:'Cap. 13–16', freq:'must', ex:25, minScore:0.8,
+        nota:'Conservação de energia é o conceito mais cobrado desta sequência.' },
+      { id:'fis-04', fase:1, bloco:'Mecânica',
+        nome:'Quantidade de movimento e colisões: impulso, elástica, inelástica',
+        detalhe:'Quantidade de movimento (p=mv). Impulso (J=F·Δt). Conservação do momento linear. Colisão elástica: conserva energia cinética. Colisão perfeitamente inelástica. Coeficiente de restituição.',
+        livro:'Ramalho Vol. 1', cap:'Cap. 17–19', freq:'must', ex:20, minScore:0.8,
+        nota:'Colisões bilhar e Newton aparecem contextualmente na prova.' },
+      { id:'fis-02b', fase:1, bloco:'Mecânica',
+        nome:'Gravitação: órbita circular, velocidade orbital, Lei de Newton',
+        detalhe:'Lei da gravitação universal. Órbita circular: v=√(GM/r). Período orbital. Satélites. Comparação peso vs força gravitacional.',
+        livro:'Ramalho Vol. 1', cap:'Cap. 20–21', freq:'high', ex:15, minScore:0.8,
+        nota:'Aparece em 7/10 anos desde 2019. Tendência crescente.' },
+      { id:'fis-05', fase:2, bloco:'Óptica Geométrica',
+        nome:'Reflexão: espelhos planos e esféricos (côncavo e convexo)',
+        detalhe:'Lei da reflexão. Espelho plano: imagem virtual, direita, tamanho igual. Espelho côncavo: equação de Gauss (1/f=1/o+1/i). Ponto focal, centro de curvatura. Espelho convexo: imagem virtual.',
+        livro:'Ramalho Vol. 2', cap:'Cap. 9–11', freq:'must', ex:20, minScore:0.8,
+        nota:'9/10 anos. Formação de imagem em espelhos esféricos é a questão clássica.' },
+      { id:'fis-06', fase:2, bloco:'Óptica Geométrica',
+        nome:'Refração: índice, lei de Snell, lâmina, prisma, reflexão total',
+        detalhe:'Índice de refração (n=c/v). Lei de Snell-Descartes (n₁senθ₁=n₂senθ₂). Lâmina de faces paralelas. Prisma: desvio mínimo. Ângulo crítico e reflexão total interna. Fibra óptica.',
+        livro:'Ramalho Vol. 2', cap:'Cap. 12–13', freq:'must', ex:20, minScore:0.8,
+        nota:'Reflexão total interna e fibra óptica aparecem em questões de contexto tecnológico.' },
+      { id:'fis-07', fase:2, bloco:'Óptica Geométrica',
+        nome:'Lentes: convergente e divergente, equação de Gauss, ampliação',
+        detalhe:'Lente convergente e divergente. Equação de Gauss (1/f=1/o+1/i). Ampliação (m=i/o). Formação de imagem em diferentes posições. Dioptria.',
+        livro:'Ramalho Vol. 2', cap:'Cap. 14', freq:'must', ex:20, minScore:0.8,
+        nota:'Lupa e óculos aparecem como contexto. Saber quando a imagem é real ou virtual.' },
+      { id:'fis-08', fase:2, bloco:'Termodinâmica',
+        nome:'Calorimetria: calor sensível, latente, equilíbrio térmico',
+        detalhe:'Calor (Q=mcΔT). Capacidade calorífica. Calor latente (Q=mL). Mudança de fase. Equilíbrio térmico: Qcedido=Qrecebido.',
+        livro:'Ramalho Vol. 2', cap:'Cap. 1–4', freq:'high', ex:20, minScore:0.8,
+        nota:'Equilíbrio térmico com mistura de substâncias é questão recorrente.' },
+      { id:'fis-09', fase:2, bloco:'Termodinâmica',
+        nome:'Gases ideais: leis de Boyle, Charles, Gay-Lussac, lei geral',
+        detalhe:'Lei de Boyle (T=cte, PV=cte). Lei de Charles (P=cte, V/T=cte). Lei de Gay-Lussac (V=cte, P/T=cte). Lei geral dos gases (PV/T=cte). Gas ideal: equação PV=nRT.',
+        livro:'Ramalho Vol. 2', cap:'Cap. 5–6', freq:'high', ex:20, minScore:0.8,
+        nota:'Diagrama P×V é frequente. Saber identificar qual lei aplicar pelo gráfico.' },
+      { id:'fis-10', fase:2, bloco:'Termodinâmica',
+        nome:'1ª e 2ª lei da termodinâmica: ciclos, eficiência, Carnot',
+        detalhe:'1ª lei: ΔU=Q-W. Processos isotérmico, isocórico, isobárico, adiabático. 2ª lei: impossibilidade do perpetuum mobile. Máquina de Carnot: eficiência η=1-Tf/Tq.',
+        livro:'Ramalho Vol. 2', cap:'Cap. 7–8', freq:'high', ex:15, minScore:0.8,
+        nota:'Diagrama PV e cálculo de eficiência são os pontos mais cobrados.' },
+      { id:'fis-11', fase:3, bloco:'Eletricidade',
+        nome:'Eletrostática: carga, força de Coulomb, campo elétrico',
+        detalhe:'Princípios: conservação e quantização da carga. Lei de Coulomb (F=kq₁q₂/d²). Campo elétrico (E=F/q). Linhas de campo. Campo elétrico uniforme. Princípio da superposição.',
+        livro:'Ramalho Vol. 3', cap:'Cap. 1–4', freq:'must', ex:20, minScore:0.8,
+        nota:'Lei de Coulomb com múltiplas cargas (vetor resultante) é questão de nível A.' },
+      { id:'fis-12', fase:3, bloco:'Eletricidade',
+        nome:'Circuitos elétricos: Ohm, resistores série/paralelo, potência',
+        detalhe:'Lei de Ohm (U=Ri). Resistência interna. Associação série (Req=ΣR) e paralela (1/Req=Σ1/R). Potência elétrica (P=UI=RI²=U²/R). Energia (E=Pt). Consumo em kWh.',
+        livro:'Ramalho Vol. 3', cap:'Cap. 5–9', freq:'must', ex:25, minScore:0.8,
+        nota:'Circuito misto com resistência interna da bateria é a questão clássica de eletricidade.' },
+      { id:'fis-13', fase:3, bloco:'Eletricidade',
+        nome:'Eletromagnetismo: campo magnético, indução, força sobre condutor',
+        detalhe:'Campo magnético de corrente (fio, espira, solenoide). Força sobre condutor em campo magnético (F=BiL). Força de Lorentz. Indução eletromagnética. Lei de Faraday e Lenz.',
+        livro:'Ramalho Vol. 3', cap:'Cap. 10–14', freq:'high', ex:15, minScore:0.8,
+        nota:'Indução eletromagnética e gerador aparecem 6/10 anos.' },
+      { id:'fis-14', fase:4, bloco:'Física Moderna',
+        nome:'Efeito fotoelétrico: E=hf, função trabalho, limiar',
+        detalhe:'Fóton: E=hf=hc/λ. Efeito fotoelétrico: energia cinética do elétron. Função trabalho (Wf). Frequência de corte. Equação de Einstein. Aplicações: célula fotovoltaica.',
+        livro:'Ramalho Vol. 3', cap:'Cap. 15–16', freq:'high', ex:15, minScore:0.8,
+        nota:'Efeito fotoelétrico aparece em 7/10 anos. Usar E=hf e calcular é suficiente.' },
+      { id:'fis-15', fase:4, bloco:'Física Moderna',
+        nome:'Radioatividade: decaimento, meia-vida, radiações α, β, γ',
+        detalhe:'Núcleo atômico: prótons e nêutrons. Emissão α (He), β (elétron), γ (fóton). Equação de decaimento. Meia-vida: N=N₀·(1/2)^(t/T). Fissão e fusão nuclear básico.',
+        livro:'Ramalho Vol. 3', cap:'Cap. 17–18', freq:'high', ex:15, minScore:0.8,
+        nota:'Cálculo de meia-vida é frequente. Decaimento sequencial aparece em questões difíceis.' },
+    ]
+  },
+
+  // ════════════════════════════════════════════════════
+  // QUÍMICA — Feltre "Química" (Moderna, 3 volumes)
+  // ════════════════════════════════════════════════════
+  {
+    id: 'qui', name: 'Química', color: '#6d28d9', q: '9–10q', diasSemana: [2], // qua
+    topicos: [
+      { id:'qui-01', fase:1, bloco:'Química Orgânica',
+        nome:'Funções orgânicas: nomenclatura sistemática IUPAC',
+        detalhe:'Hidrocarbonetos: alcanos, alcenos, alcinos, aromáticos (benzeno). Funções oxigenadas: álcool, aldeído, cetona, ácido carboxílico, éster, éter. Funções nitrogenadas: amina, amida, nitro. Nomenclatura e prefixos.',
+        livro:'Feltre Vol. 3', cap:'Cap. 1–8', freq:'must', ex:30, minScore:0.8,
+        nota:'10/10 anos. FUVEST adora dar a fórmula estrutural e pedir a função ou nome.' },
+      { id:'qui-02', fase:1, bloco:'Química Orgânica',
+        nome:'Isomeria: plana (cadeia, posição, função, compensação, tautomeria) e espacial',
+        detalhe:'Isomeria plana: cadeia (normal/ramificada), posição (dupla, substituinte), função (álcool-éter, aldeído-cetona). Isomeria espacial: cis-trans (geométrica), óptica (quiralidade, carbono assimétrico).',
+        livro:'Feltre Vol. 3', cap:'Cap. 9–10', freq:'must', ex:20, minScore:0.8,
+        nota:'Isomeria óptica (quiralidade) é questão de nível avançado — frequente em FUVEST.' },
+      { id:'qui-03', fase:1, bloco:'Química Orgânica',
+        nome:'Reações orgânicas: adição, substituição, eliminação, combustão',
+        detalhe:'Adição em alcenos: halogenação, hidratação, hidrogenação, hidroalogenação (Markovnikov). Substituição em alcanos (halogenação). Eliminação (desidratação, desidroalogenação). Combustão completa e incompleta.',
+        livro:'Feltre Vol. 3', cap:'Cap. 11–14', freq:'must', ex:25, minScore:0.8,
+        nota:'Markovnikov e combustão aparecem todo ano. Saber a lógica das reações.' },
+      { id:'qui-04', fase:1, bloco:'Química Orgânica',
+        nome:'Reações de esterificação, saponificação e polímeros',
+        detalhe:'Esterificação: ácido + álcool ⇌ éster + H₂O. Saponificação: éster + NaOH → sabão + glicerol. Polímeros de adição (polietileno, PVC) e condensação (nylon, poliéster, baquelite). Borracha natural e sintética.',
+        livro:'Feltre Vol. 3', cap:'Cap. 15–18', freq:'must', ex:20, minScore:0.8,
+        nota:'Sabão, plástico e borracha aparecem como contexto da ciência da vida cotidiana.' },
+      { id:'qui-05', fase:2, bloco:'Estequiometria',
+        nome:'Mol, massa molar, número de Avogadro, cálculos estequiométricos',
+        detalhe:'Conceito de mol (6,02×10²³). Massa molar (g/mol). Número de partículas. Relações estequiométricas em mol, massa e volume. Reagente limitante. Pureza e rendimento.',
+        livro:'Feltre Vol. 1', cap:'Cap. 11–14', freq:'must', ex:25, minScore:0.8,
+        nota:'Reagente limitante é o ponto mais cobrado de estequiometria em FUVEST.' },
+      { id:'qui-06', fase:2, bloco:'Equilíbrio e Cinética',
+        nome:'Equilíbrio químico: constantes Kc e Kp, lei de ação das massas',
+        detalhe:'Reação reversível. Estado de equilíbrio. Lei de ação das massas: Kc e Kp. Quociente de reação (Q). Relação Kc-Kp. Cálculo de concentrações no equilíbrio.',
+        livro:'Feltre Vol. 2', cap:'Cap. 1–3', freq:'must', ex:25, minScore:0.8,
+        nota:'Kc e cálculo de concentração são os pontos mais cobrados.' },
+      { id:'qui-07', fase:2, bloco:'Equilíbrio e Cinética',
+        nome:'Princípio de Le Chatelier: deslocamento do equilíbrio',
+        detalhe:'Efeito da pressão, temperatura e concentração no equilíbrio. Síntese de amônia (Haber-Bosch). Grau de dissociação. Equilíbrio heterogêneo.',
+        livro:'Feltre Vol. 2', cap:'Cap. 4', freq:'must', ex:20, minScore:0.8,
+        nota:'Síntese da amônia é o exemplo mais cobrado de Le Chatelier.' },
+      { id:'qui-08', fase:2, bloco:'Equilíbrio e Cinética',
+        nome:'pH, pOH, ácidos e bases: Ka, Kb, Kw, hidrólise salina',
+        detalhe:'Teoria de Arrhenius. Teoria de Brønsted-Lowry. Ka e Kb. Kw=10⁻¹⁴. pH=-log[H⁺]. Força de ácidos e bases. Hidrólise salina: sal ácido, básico, neutro.',
+        livro:'Feltre Vol. 2', cap:'Cap. 5–7', freq:'must', ex:25, minScore:0.8,
+        nota:'Cálculo de pH de ácido forte é presença garantida. Hidrólise é questão de nível A.' },
+      { id:'qui-09', fase:2, bloco:'Equilíbrio e Cinética',
+        nome:'Produto de solubilidade (Kps) e solubilidade',
+        detalhe:'Equilíbrio de dissolução. Kps: cálculo de solubilidade. Efeito de íon comum. Precipitação seletiva. Fatores que afetam a solubilidade.',
+        livro:'Feltre Vol. 2', cap:'Cap. 8', freq:'high', ex:15, minScore:0.8,
+        nota:'Kps e efeito de íon comum aparece em 7/10 anos.' },
+      { id:'qui-10', fase:3, bloco:'Eletroquímica',
+        nome:'Pilhas galvânicas: ânodo, cátodo, ddp, ponte de sal, notação',
+        detalhe:'Semirreação de oxidação e redução. Ânodo (-) e cátodo (+). Diferença de potencial (ddp). Notação de pilha. Série eletroquímica de potenciais padrão. Pilha de Daniell.',
+        livro:'Feltre Vol. 2', cap:'Cap. 13', freq:'must', ex:20, minScore:0.8,
+        nota:'Cálculo de ddp e identificação de ânodo/cátodo são garantidos.' },
+      { id:'qui-11', fase:3, bloco:'Eletroquímica',
+        nome:'Eletrólise: lei de Faraday, massa depositada, cálculo',
+        detalhe:'Eletrólise ígnea e aquosa. Ânodo (+) e cátodo (-). 1ª lei de Faraday: m=ZQ. Constante de Faraday (96.500 C). Cálculo de massa depositada. Cobre refino e eletrodeposição.',
+        livro:'Feltre Vol. 2', cap:'Cap. 14–15', freq:'must', ex:20, minScore:0.8,
+        nota:'Cálculo de massa por eletrólise aparece com alta frequência.' },
+      { id:'qui-12', fase:3, bloco:'Termoquímica',
+        nome:'Entalpia: calor de formação, combustão, Lei de Hess',
+        detalhe:'Entalpia de formação padrão (ΔHf°). Entalpia de combustão. Exotérmica e endotérmica. Lei de Hess: ΔH não depende do caminho. Ciclo de Born-Haber básico.',
+        livro:'Feltre Vol. 2', cap:'Cap. 10–12', freq:'high', ex:20, minScore:0.8,
+        nota:'Lei de Hess aparece em ~7/10 anos. Saber manipular equações químicas.' },
+      { id:'qui-13', fase:3, bloco:'Cinética Química',
+        nome:'Velocidade de reação: lei de velocidade, fatores, Arrhenius',
+        detalhe:'Taxa de reação. Lei de velocidade: v=k[A]^m[B]^n. Ordem de reação. Constante de velocidade (k). Equação de Arrhenius: temperatura e Ea. Catalisador: energia de ativação.',
+        livro:'Feltre Vol. 2', cap:'Cap. 16–18', freq:'high', ex:15, minScore:0.8,
+        nota:'Gráfico de energia de ativação com e sem catalisador é frequente.' },
+    ]
+  },
+
+  // ════════════════════════════════════════════════════
+  // HISTÓRIA — Cotrim "História Global" (Saraiva)
+  // ════════════════════════════════════════════════════
+  {
+    id: 'his', name: 'História', color: '#92400e', q: '9q', diasSemana: [0], // seg tarde
+    topicos: [
+      { id:'his-01', fase:1, bloco:'Brasil Colonial',
+        nome:'Colonização: capitanias, escravidão, economia colonial',
+        detalhe:'Tratado de Tordesilhas. Capitanias hereditárias. Sistema escravista: tráfico transatlântico, vida dos escravizados, quilombos. Pau-brasil, cana-de-açúcar, ouro. Cais do Valongo.',
+        livro:'Cotrim', cap:'Unidades 5–7', freq:'high', ex:15, minScore:0.8,
+        nota:'Brasil colonial aparece embutido em questões de memória e patrimônio.' },
+      { id:'his-02', fase:1, bloco:'Brasil Colonial',
+        nome:'Sedições coloniais: Inconfidência Mineira e Conjuração Baiana',
+        detalhe:'Contexto iluminista. Inconfidência Mineira (1789): Tiradentes, derrama, desfecho. Conjuração Baiana (1798): escravizados e libertos islâmicos, radicalismo. Diferenças entre os movimentos.',
+        livro:'Cotrim', cap:'Unidade 8', freq:'high', ex:10, minScore:0.8,
+        nota:'FUVEST usa esses movimentos para discutir cidadania e revolução.' },
+      { id:'his-03', fase:1, bloco:'Brasil Imperial',
+        nome:'Independência, Primeiro Reinado e período regencial',
+        detalhe:'Chegada de D. João VI. Independência em 7/9/1822. Constituição de 1824. Abdicação de Pedro I. Período regencial: revoltas (Cabanagem, Balaiada, Farroupilha, Sabinada).',
+        livro:'Cotrim', cap:'Unidades 9–10', freq:'high', ex:15, minScore:0.8,
+        nota:'Revoltas regenciais como expressão de tensões sociais — contexto FUVEST.' },
+      { id:'his-04', fase:1, bloco:'Brasil Imperial',
+        nome:'Segundo Reinado: escravidão, abolição, Guerra do Paraguai',
+        detalhe:'Estabilidade política. Lei Eusébio de Queirós (1850). Lei do Ventre Livre (1871). Lei dos Sexagenários (1885). Lei Áurea (1888). Protagonismo negro na abolição. Guerra do Paraguai: causas, consequências, revisão historiográfica.',
+        livro:'Cotrim', cap:'Unidades 11–12', freq:'must', ex:15, minScore:0.8,
+        nota:'Abolição e protagonismo negro são tendência crescente em FUVEST.' },
+      { id:'his-05', fase:2, bloco:'Brasil República',
+        nome:'República Velha: coronelismo, café com leite, revoltas populares',
+        detalhe:'Proclamação (1889). Política dos governadores. Coronelismo. Café com leite. Revolta de Canudos (1896–97). Revolta da Chibata (1910). Contestado. Revoltas da Armada.',
+        livro:'Cotrim', cap:'Unidades 13–14', freq:'must', ex:15, minScore:0.8,
+        nota:'Canudos e o sertão nordestino são temas recorrentes — conecta com Geo.' },
+      { id:'his-06', fase:2, bloco:'Brasil República',
+        nome:'Era Vargas: Revolução de 30, Estado Novo, getulismo, trabalhismo',
+        detalhe:'Revolução de 1930: fim da República Velha. Constitucionalismo (1932). Estado Novo (1937–1945): ditadura, centralização. CLT e direitos trabalhistas. Queima da bandeira, populismo.',
+        livro:'Cotrim', cap:'Unidades 15–16', freq:'must', ex:15, minScore:0.8,
+        nota:'Vargas e trabalhismo aparecem em questões de análise de fontes primárias.' },
+      { id:'his-07', fase:2, bloco:'Brasil República',
+        nome:'Democracia populista (1945–1964): JK, Jango, Brasília',
+        detalhe:'Dutra e redemocratização. JK: desenvolvimentismo, 50 anos em 5, Brasília. Jânio Quadros: renúncia. João Goulart: reformas de base, crise política.',
+        livro:'Cotrim', cap:'Unidades 17', freq:'high', ex:10, minScore:0.8,
+        nota:'JK e Brasília como símbolo do desenvolvimentismo são contextos frequentes.' },
+      { id:'his-08', fase:2, bloco:'Brasil República',
+        nome:'Ditadura Militar (1964–1985): AI-5, milagre, resistência, abertura',
+        detalhe:'Golpe de 1964. Atos Institucionais (AI-1 ao AI-5). Repressão e tortura. Milagre econômico (1968–1973). Movimento estudantil. Distensão Geisel. Anistia (1979). Eleições diretas.',
+        livro:'Cotrim', cap:'Unidades 18–19', freq:'must', ex:15, minScore:0.8,
+        nota:'10/10 anos. AI-5 e memória da ditadura são presença garantida.' },
+      { id:'his-09', fase:3, bloco:'Europa e Mundo',
+        nome:'1ª e 2ª Revolução Industrial: impactos sociais e geopolíticos',
+        detalhe:'1ª RI: Inglaterra, máquina a vapor, proletariado, urbanização. 2ª RI: EUA/Alemanha, eletricidade, taylorismo/fordismo, imperialismo. Tabela industrialização por país.',
+        livro:'Cotrim', cap:'Unidades 20–21', freq:'must', ex:10, minScore:0.8,
+        nota:'FUVEST usa tabelas comparativas de industrialização — treinar interpretação de dados.' },
+      { id:'his-10', fase:3, bloco:'Europa e Mundo',
+        nome:'Nazifascismo, WWII e Holocausto',
+        detalhe:'Crise de 1929 e ascensão dos fascismos. Mussolini e Hitler: ideologia, Estado totalitário. 2ª Guerra: frentes, principais batalhas. Holocausto. Tribunal de Nuremberg. ONU.',
+        livro:'Cotrim', cap:'Unidades 22–24', freq:'must', ex:15, minScore:0.8,
+        nota:'WWII aparece 8/10 anos — frequentemente com análise de imagem ou documento.' },
+      { id:'his-11', fase:3, bloco:'Europa e Mundo',
+        nome:'África: colonialismo, Conferência de Berlim, descolonização',
+        detalhe:'Partilha da África (1884–85). Resistências africanas. 2ª Guerra e enfraquecimento colonial. Descolonização (1950–1970). Apartheid. África e diáspora na historiografia atual.',
+        livro:'Cotrim', cap:'Unidades 25–26', freq:'high', ex:10, minScore:0.8,
+        nota:'África 6/10 anos e tendência crescente (2024–2025 muito forte). Prioridade crescente.' },
+      { id:'his-12', fase:4, bloco:'Europa e Mundo',
+        nome:'Antiguidade: Grécia, Roma, Medieval, Renascimento, Reforma',
+        detalhe:'Democracia ateniense. Polis grega. Roma: República e Império. Feudalismo medieval. Renascimento humanista. Reforma Protestante e Contrarreforma. Absolutismo e Iluminismo.',
+        livro:'Cotrim', cap:'Unidades 1–4 e 17–18', freq:'high', ex:10, minScore:0.8,
+        nota:'Grécia Clássica aparece em contexto filosófico e político.' },
+    ]
+  },
+
+  // ════════════════════════════════════════════════════
+  // GEOGRAFIA — Vesentini & Vlach "Geografia Geral e do Brasil" (Ática)
+  // ════════════════════════════════════════════════════
+  {
+    id: 'geo', name: 'Geografia', color: '#9d174d', q: '8–9q', diasSemana: [1], // ter tarde
+    topicos: [
+      { id:'geo-01', fase:1, bloco:'Brasil — Território e Biomas',
+        nome:'Biomas brasileiros: características, ameaças, conservação',
+        detalhe:'Amazônia: floresta equatorial, desmatamento, garimpo, biopirataria. Cerrado: savana, agronegócio, nascentes. Caatinga: semiárido, convivência. Mata Atlântica: remanescentes, restauração. Pantanal. Pampa. Aquífero Guarani.',
+        livro:'Vesentini Vol. 1', cap:'Cap. 5–7', freq:'must', ex:15, minScore:0.8,
+        nota:'Desmatamento da Amazônia aparece todo ano. Conecta com Bio e questões ambientais.' },
+      { id:'geo-02', fase:1, bloco:'Brasil — Território e Biomas',
+        nome:'Urbanização brasileira: metropolização, favelização, mobilidade',
+        detalhe:'Êxodo rural. Metropolização: Grande São Paulo, Rio, Nordeste. Favelas e periferização. Segregação socioespacial. Mobilidade urbana. Gentrificação. Crescimento das cidades médias.',
+        livro:'Vesentini Vol. 1', cap:'Cap. 8–9', freq:'must', ex:10, minScore:0.8,
+        nota:'Favelas em São Paulo e segregação urbana aparecem 8/10 anos.' },
+      { id:'geo-03', fase:1, bloco:'Brasil — Território e Biomas',
+        nome:'Agropecuária brasileira: estrutura fundiária, agronegócio, commodities',
+        detalhe:'Latifúndio vs agricultura familiar. Revolução verde: mecanização, agrotóxico. Commodities: soja, milho, carne. Exportações. Problema fundiário e MST. Uso de agrotóxico.',
+        livro:'Vesentini Vol. 1', cap:'Cap. 10–11', freq:'high', ex:10, minScore:0.8,
+        nota:'Agronegócio e desmatamento do Cerrado são contextos frequentes.' },
+      { id:'geo-04', fase:2, bloco:'Brasil — Geomorfologia e Clima',
+        nome:'Relevo brasileiro: planaltos, planícies, depressões. Aziz Ab\'Sáber',
+        detalhe:'Classificação de Ab\'Sáber. Planalto Atlântico, Planalto Central, Planalto Meridional. Depressão do São Francisco e Periférica. Planícies. Erosão: voçoroca, ravina.',
+        livro:'Vesentini Vol. 1', cap:'Cap. 3–4', freq:'high', ex:10, minScore:0.8,
+        nota:'Ab\'Sáber e voçorocas aparecem com alta frequência em FUVEST.' },
+      { id:'geo-05', fase:2, bloco:'Brasil — Geomorfologia e Clima',
+        nome:'Climas do Brasil: equatorial, tropical, semiárido, subtropical',
+        detalhe:'Clima equatorial (Amazônia). Tropical úmido e seco. Semiárido do Nordeste: seca, El Niño. Subtropical: geadas, quatro estações. Clima tropical de altitude.',
+        livro:'Vesentini Vol. 1', cap:'Cap. 4', freq:'high', ex:10, minScore:0.8,
+        nota:'Seca do Nordeste e El Niño aparecem em contexto de políticas públicas.' },
+      { id:'geo-06', fase:2, bloco:'Brasil — Geomorfologia e Clima',
+        nome:'Hidrografia brasileira: bacias, rios, potencial energético',
+        detalhe:'Bacia Amazônica (maior do mundo). Bacia do Paraná-Prata (maior volume). São Francisco. Aproveitamento hidrelétrico. Usina de Belo Monte e conflitos. Transposição do São Francisco.',
+        livro:'Vesentini Vol. 1', cap:'Cap. 4', freq:'high', ex:10, minScore:0.8,
+        nota:'Geopolítica da água e bacias hidrográficas aparecem contextualmente.' },
+      { id:'geo-07', fase:3, bloco:'Geopolítica Global',
+        nome:'Globalização: fluxos, corporações transnacionais, desigualdade',
+        detalhe:'Globalização econômica e cultural. Divisão internacional do trabalho. Corporações transnacionais. Desigualdade Norte-Sul. Índices de desenvolvimento (IDH, GINI). Neoliberalismo.',
+        livro:'Vesentini Vol. 2', cap:'Cap. 1–3', freq:'must', ex:10, minScore:0.8,
+        nota:'Globalização é o contexto geral de 40% das questões de geo.' },
+      { id:'geo-08', fase:3, bloco:'Geopolítica Global',
+        nome:'Conflitos geopolíticos: Oriente Médio, Ucrânia, Taiwan, refugiados',
+        detalhe:'Conflito Israel-Palestina: histórico, acordos, impasse. Ucrânia: expansão da OTAN, guerra. Taiwan: geopolítica do Pacífico. Refugiados: definição, rotas, ACNUR.',
+        livro:'Vesentini Vol. 2', cap:'Cap. 4–6', freq:'must', ex:10, minScore:0.8,
+        nota:'FUVEST usa conflitos atuais como contexto. Sempre atualizar com notícias.' },
+      { id:'geo-09', fase:3, bloco:'Geopolítica Global',
+        nome:'Geopolítica dos recursos: petróleo (OPEP), xisto, energias renováveis',
+        detalhe:'OPEP e controle do mercado de petróleo. Revolução do xisto nos EUA. Pré-sal brasileiro. Transição energética: solar, eólica, hidrogênio verde. Nexus energia-água-alimento.',
+        livro:'Vesentini Vol. 2', cap:'Cap. 7–8', freq:'high', ex:10, minScore:0.8,
+        nota:'Petróleo e geopolítica energética aparecem 8/10 anos.' },
+      { id:'geo-10', fase:3, bloco:'Geopolítica Global',
+        nome:'Blocos econômicos: UE, Mercosul, BRICS, OMC',
+        detalhe:'União Europeia: integração, euro, crise. Mercosul: objetivos, limitações. BRICS: papel do Brasil. OMC e comércio internacional. Protecionismo e barreiras tarifárias.',
+        livro:'Vesentini Vol. 2', cap:'Cap. 9–10', freq:'high', ex:10, minScore:0.8,
+        nota:'BRICS e papel do Brasil na geopolítica aparecem contextualmente.' },
+      { id:'geo-11', fase:4, bloco:'Geografia Física Geral',
+        nome:'Tectônica de placas, vulcanismo, terremotos',
+        detalhe:'Placas tectônicas: convergência, divergência, transformante. Vulcanismo: zonas de subducção. Terremotos: foco, epicentro, escala Richter. Anel de fogo do Pacífico.',
+        livro:'Vesentini Vol. 2', cap:'Cap. 11', freq:'med', ex:8, minScore:0.8,
+        nota:'Aparece em contexto de catástrofes e riscos geológicos.' },
+    ]
+  },
+
+  // ════════════════════════════════════════════════════
+  // PORTUGUÊS / LITERATURA — Cereja & Magalhães (Atual Editora)
+  // ════════════════════════════════════════════════════
+  {
+    id: 'por', name: 'Português / Literatura', color: '#065f46', q: '14q', diasSemana: [3,6], // qui, dom
+    topicos: [
+      { id:'por-01', fase:1, bloco:'Interpretação de Texto',
+        nome:'Leitura inferencial: tese, argumento, implicatura',
+        detalhe:'O que o texto diz vs. implica. Inferência direta e indireta. Identificação da tese. Argumento central e periférico. Exemplificação e ilustração. Ironia e sarcasmo.',
+        livro:'Cereja Vol. 1', cap:'Cap. 1–3', freq:'must', ex:20, minScore:0.8,
+        nota:'Base de tudo. Todas as 14 questões de Port/Lit exigem esta habilidade.' },
+      { id:'por-02', fase:1, bloco:'Interpretação de Texto',
+        nome:'Relações lógico-semânticas e conectivos',
+        detalhe:'Causa e consequência. Concessão e oposição (embora, apesar de, mas). Condição e hipótese. Explicação e conclusão. Adição e alternância. Questões com "exceto" e negativas.',
+        livro:'Cereja Vol. 1', cap:'Cap. 4–5', freq:'must', ex:20, minScore:0.8,
+        nota:'FUVEST usa conectivos como chave interpretativa em questões de Fil/Soc também.' },
+      { id:'por-03', fase:1, bloco:'Interpretação de Texto',
+        nome:'Gêneros textuais: crônica, conto, editorial, científico, publicitário',
+        detalhe:'Características de cada gênero. Intenção comunicativa. Interlocutor. Linguagem formal e informal. Heterogeneidade discursiva: citação, discurso direto/indireto.',
+        livro:'Cereja Vol. 1', cap:'Cap. 6–8', freq:'must', ex:15, minScore:0.8,
+        nota:'FUVEST mistura gêneros num mesmo texto. Saber identificar a voz do narrador.' },
+      { id:'por-04', fase:1, bloco:'Gramática e Língua',
+        nome:'Figuras de linguagem: metáfora, metonímia, ironia, hipérbole, antítese',
+        detalhe:'Metáfora e comparação. Metonímia (parte pelo todo, continente pelo conteúdo). Ironia e antífrase. Hipérbole. Eufemismo. Antítese e paradoxo. Prosopopeia. Sinestesia.',
+        livro:'Cereja Vol. 1', cap:'Cap. 9–11', freq:'must', ex:20, minScore:0.8,
+        nota:'10/10 anos. Identificar a figura e explicar seu efeito de sentido no texto.' },
+      { id:'por-05', fase:2, bloco:'Gramática e Língua',
+        nome:'Sintaxe: sujeito, predicado, complementos verbais e nominais',
+        detalhe:'Sujeito (simples, composto, indeterminado, oculto, inexistente). Predicado verbal, nominal, verbo-nominal. Objeto direto e indireto. Complemento nominal. Adjunto adnominal e adverbial.',
+        livro:'Cereja Vol. 2', cap:'Cap. 1–5', freq:'high', ex:20, minScore:0.8,
+        nota:'FUVEST cobra sintaxe indiretamente — pedindo o sentido de estruturas.' },
+      { id:'por-06', fase:2, bloco:'Gramática e Língua',
+        nome:'Concordância, regência, crase e colocação pronominal',
+        detalhe:'Concordância verbal: sujeito composto, pronome relativo. Concordância nominal. Regência verbal: verbos mais cobrados (assistir, aspirar, obedecer, visar). Crase: regras práticas. Ênclise, próclise, mesóclise.',
+        livro:'Cereja Vol. 2', cap:'Cap. 6–10', freq:'high', ex:20, minScore:0.8,
+        nota:'FUVEST cobra em contexto — nunca pede regra isolada, cobra na frase.' },
+      { id:'por-07', fase:2, bloco:'Literatura Brasileira — Escolas',
+        nome:'Arcadismo, Barroco, Romantismo: autores e obras',
+        detalhe:'Barroco: Gregório de Matos, Padre Antônio Vieira. Arcadismo: Cláudio Manuel, Tomás Antônio Gonzaga. Romantismo 1ª fase: Gonçalves Dias, Alencar (indianismo). 2ª fase: Álvares de Azevedo. 3ª fase: Castro Alves.',
+        livro:'Cereja Vol. 1', cap:'Cap. 12–16', freq:'high', ex:10, minScore:0.8,
+        nota:'Alencar (Iracema) aparece em 7/10 anos — sempre com texto para análise.' },
+      { id:'por-08', fase:2, bloco:'Literatura Brasileira — Escolas',
+        nome:'Realismo e Naturalismo: Machado de Assis, Aluísio Azevedo',
+        detalhe:'Machado de Assis: Memórias Póstumas (narrador não confiável, ironia, metaficção), Dom Casmurro (ciúme, ambiguidade de Capitu), Quincas Borba (Humanitismo). Realismo: características. Aluísio Azevedo: O Cortiço (determinismo, naturalismo).',
+        livro:'Cereja Vol. 2', cap:'Cap. 1–5', freq:'must', ex:15, minScore:0.8,
+        nota:'Machado de Assis 9/10 anos. Leitura integral das obras obrigatórias é obrigatória.' },
+      { id:'por-09', fase:3, bloco:'Literatura Brasileira — Escolas',
+        nome:'Pré-modernismo e Modernismo 1ª fase: Euclides, Lima Barreto, Semana de 22',
+        detalhe:'Euclides da Cunha: Os Sertões (Canudos, determinismo, linguagem). Lima Barreto: marginalidade e crítica social. Semana de Arte Moderna de 1922. Oswald e Mário de Andrade: fragmentação, humor, nacional.',
+        livro:'Cereja Vol. 2', cap:'Cap. 6–10', freq:'high', ex:10, minScore:0.8,
+        nota:'Semana de 22 aparece em contexto histórico-cultural. Modernismo como ruptura.' },
+      { id:'por-10', fase:3, bloco:'Literatura Brasileira — Escolas',
+        nome:'Modernismo 2ª e 3ª fase: Drummond, Graciliano, Guimarães Rosa, Clarice',
+        detalhe:'Drummond: poesia do cotidiano, tom irônico, pedra no meio do caminho, gauche. Graciliano Ramos: Vidas Secas (seco, behaviorismo), Angústia (fluxo de consciência). Guimarães Rosa: Grande Sertão, mistura de linguagem. Clarice: introspecção, A Hora da Estrela.',
+        livro:'Cereja Vol. 2', cap:'Cap. 11–16', freq:'must', ex:20, minScore:0.8,
+        nota:'Drummond 9/10, Graciliano 8/10. Ler as obras obrigatórias por inteiro.' },
+      { id:'por-11', fase:3, bloco:'Literatura Africana',
+        nome:'Literatura africana de língua portuguesa: Pepetela, Honwana, Chiziane',
+        detalhe:'Contexto PALOP (Angola, Moçambique). Pepetela: Mayombe (guerra colonial, guerrilha). Honwana: Nós Matámos o Cão Tinhoso (ponto de vista infantil, violência colonial). Paulina Chiziane. Pós-colonialismo e língua.',
+        livro:'Cereja Vol. 3', cap:'Cap. 1–4 (suplemento)', freq:'high', ex:10, minScore:0.8,
+        nota:'6/10 anos e crescente. 2024: 3 questões de lit. africana. Alta prioridade.' },
+      { id:'por-12', fase:4, bloco:'Literatura Portuguesa',
+        nome:'Fernando Pessoa: heterônimos, Mensagem, Modernismo português',
+        detalhe:'Ortônimo vs heterônimos. Alberto Caeiro (sensacionismo, natureza). Álvaro de Campos (futurismo, Ode Triunfal). Ricardo Reis (epicurismo, odes). Mensagem: única obra em português, simbolismo nacional.',
+        livro:'Cereja Vol. 3', cap:'Cap. 5–6', freq:'high', ex:10, minScore:0.8,
+        nota:'Fernando Pessoa 7/10 anos. Mensagem aparece frequentemente.' },
+    ]
+  },
+
+  // ════════════════════════════════════════════════════
+  // FILOSOFIA / SOCIOLOGIA — Aranha "Filosofia" + Tomazi "Sociologia"
+  // ════════════════════════════════════════════════════
+  {
+    id: 'fil', name: 'Filosofia / Sociologia', color: '#7c2d12', q: '7–8q', diasSemana: [4], // sex tarde
+    topicos: [
+      { id:'fil-01', fase:1, bloco:'Filosofia Grega',
+        nome:'Sócrates, Platão e Aristóteles: método, idéias, ética',
+        detalhe:'Sócrates: método maiêutico, ironia socrática, virtude como conhecimento. Platão: teoria das ideias, alegoria da caverna, República (filósofo-rei). Aristóteles: silogismo, ética das virtudes, eudaimonia, política (polis e cidadão).',
+        livro:'Aranha', cap:'Cap. 3–6', freq:'must', ex:15, minScore:0.8,
+        nota:'Platão e Aristóteles aparecem 8/10 anos. Alegoria da caverna é a questão clássica.' },
+      { id:'fil-02', fase:1, bloco:'Filosofia Grega',
+        nome:'Pré-socráticos: physis, arché, cosmologia',
+        detalhe:'Tales (água como arché). Heráclito (devir, fogo). Parmênides (ser imóvel). Demócrito (atomismo). Anaxágoras (nous). Problema do ser e do não-ser.',
+        livro:'Aranha', cap:'Cap. 1–2', freq:'high', ex:10, minScore:0.8,
+        nota:'Heráclito vs Parmênides (ser e devir) é contexto frequente em questões.' },
+      { id:'fil-03', fase:2, bloco:'Filosofia Moderna',
+        nome:'Descartes, Locke, Hume: racionalismo e empirismo',
+        detalhe:'Descartes: dúvida metódica, cogito ergo sum, dualismo. Locke: tabula rasa, empirismo, governo por consentimento. Hume: ceticismo, hábito e costume, problema da indução.',
+        livro:'Aranha', cap:'Cap. 9–12', freq:'high', ex:10, minScore:0.8,
+        nota:'Empirismo vs racionalismo aparece em questões de epistemologia.' },
+      { id:'fil-04', fase:2, bloco:'Filosofia Moderna',
+        nome:'Kant: criticismo, imperativo categórico, autonomia da razão',
+        detalhe:'Crítica da Razão Pura: síntese a priori. Criticismo: racionalismo+empirismo. Crítica da Razão Prática: ética deontológica. Imperativo categórico: agir pela regra universalizável. Autonomia vs heteronomia.',
+        livro:'Aranha', cap:'Cap. 13', freq:'high', ex:10, minScore:0.8,
+        nota:'Kant é um dos seus favoritos — dominar o imperativo categórico é essencial.' },
+      { id:'fil-05', fase:2, bloco:'Filosofia Política',
+        nome:'Hobbes, Rousseau, Locke: contrato social, Estado de natureza',
+        detalhe:'Hobbes: Estado de natureza violento, Leviatã, soberania absoluta. Locke: direitos naturais, governo por consentimento, direito à revolução. Rousseau: bom selvagem, vontade geral, contrato social.',
+        livro:'Aranha', cap:'Cap. 7–8', freq:'high', ex:10, minScore:0.8,
+        nota:'FUVEST usa contratualismo para discutir democracia e direitos.' },
+      { id:'fil-06', fase:3, bloco:'Sociologia Clássica',
+        nome:'Durkheim: fato social, solidariedade, anomia, suicídio',
+        detalhe:'Fato social: exterior, coercitivo, geral. Solidariedade mecânica (pré-industrial) e orgânica (industrial). Anomia: ausência de normas. Suicídio: egoísta, altruísta, anômico. Método sociológico.',
+        livro:'Tomazi', cap:'Cap. 1–3', freq:'must', ex:10, minScore:0.8,
+        nota:'Durkheim aparece 8/10 anos. Fato social e anomia são os conceitos mais cobrados.' },
+      { id:'fil-07', fase:3, bloco:'Sociologia Clássica',
+        nome:'Marx: materialismo histórico, mais-valia, alienação, luta de classes',
+        detalhe:'Materialismo histórico e dialético. Infraestrutura e superestrutura. Mais-valia: absoluta e relativa. Alienação do trabalho. Luta de classes. Ideologia como instrumento de dominação.',
+        livro:'Tomazi', cap:'Cap. 4–6', freq:'high', ex:10, minScore:0.8,
+        nota:'Marx aparece em contexto de desigualdade e trabalho — tendência atual.' },
+      { id:'fil-08', fase:3, bloco:'Sociologia Clássica',
+        nome:'Weber: ação social, dominação, burocracia, ética protestante',
+        detalhe:'Ação social: tradicional, afetiva, racional com relação a valores, racional com relação a fins. Tipos de dominação: tradicional, carismática, legal-racional. Burocracia. Ética protestante e espírito do capitalismo.',
+        livro:'Tomazi', cap:'Cap. 7–9', freq:'must', ex:15, minScore:0.8,
+        nota:'Weber é o mais cobrado dos três clássicos. Tipos de dominação e burocracia todo ano.' },
+      { id:'fil-09', fase:4, bloco:'Sociologia Contemporânea',
+        nome:'Gênero, raça e desigualdade: Butler, racismo estrutural',
+        detalhe:'Butler: gênero como performance, desconstrução do binário. Racismo estrutural: Silvio Almeida. Interseccionalidade. Desigualdade racial no Brasil. Políticas de cotas. Feminismo: ondas.',
+        livro:'Tomazi', cap:'Cap. 10–12', freq:'must', ex:10, minScore:0.8,
+        nota:'Tendência fortemente crescente. Gênero e raça aparecem 8/10 anos (pós-2020).' },
+      { id:'fil-10', fase:4, bloco:'Sociologia Contemporânea',
+        nome:'Mídia, redes sociais, esfera pública e fake news',
+        detalhe:'Habermas: esfera pública. Sociedade da informação. Algoritmos e câmaras de eco. Fake news e desinformação. Vigilância digital. Influência das redes na política (cancelamento, populismo digital).',
+        livro:'Tomazi', cap:'Cap. 13–14', freq:'high', ex:10, minScore:0.8,
+        nota:'Mídia e política digital aparecem em questões de conjuntura. Muito contextual.' },
+    ]
+  },
+
+];
+
+
+// ════════════════════════════════════════════════════════
+// CONTEÚDO RENDER + LÓGICA DE PROGRESSO
+// ════════════════════════════════════════════════════════
+
+// State: per-topic: { read: bool, exDone: bool, exScore: number|null }
+let conteudoState = {};
+
+function getCState(tid) {
+  if (!conteudoState[tid]) conteudoState[tid] = { read: false, exDone: false, exScore: null };
+  return conteudoState[tid];
+}
+
+function saveConteudoState() {
+  try { localStorage.setItem('studyos_conteudo', JSON.stringify(conteudoState)); } catch(e){}
+}
+
+function loadConteudoState() {
+  try {
+    const s = localStorage.getItem('studyos_conteudo');
+    if (s) conteudoState = JSON.parse(s);
+  } catch(e){}
+}
+
+// ── Get next incomplete topic for a subject ──
+function getNextTopic(subjectId) {
+  const subj = CONTEUDO_DATA.find(s => s.id === subjectId);
+  if (!subj) return null;
+  for (const t of subj.topicos) {
+    const st = getCState(t.id);
+    if (!st.read || !st.exDone || (st.exScore !== null && st.exScore < t.minScore)) {
+      return t;
+    }
+  }
+  return null; // all done
+}
+
+// ── Stats per subject ──
+function getSubjectStats(subjectId) {
+  const subj = CONTEUDO_DATA.find(s => s.id === subjectId);
+  if (!subj) return { total: 0, readDone: 0, exDone: 0, approved: 0 };
+  let readDone = 0, exDone = 0, approved = 0;
+  for (const t of subj.topicos) {
+    const st = getCState(t.id);
+    if (st.read) readDone++;
+    if (st.exDone) exDone++;
+    if (st.read && st.exDone && st.exScore !== null && st.exScore >= t.minScore) approved++;
+  }
+  return { total: subj.topicos.length, readDone, exDone, approved };
+}
+
+// ── Global velocity estimate ──
+function getVelocityStats() {
+  let totalTopics = 0, approvedTopics = 0;
+  for (const subj of CONTEUDO_DATA) {
+    totalTopics += subj.topicos.length;
+    for (const t of subj.topicos) {
+      const st = getCState(t.id);
+      if (st.read && st.exDone && st.exScore !== null && st.exScore >= t.minScore) approvedTopics++;
+    }
+  }
+  return { totalTopics, approvedTopics, remaining: totalTopics - approvedTopics };
+}
+
+// ── Estimate days to finish based on pace ──
+function estimateDaysToFinish(approvedSoFar, daysStudied) {
+  if (approvedSoFar === 0 || daysStudied === 0) return null;
+  const { remaining } = getVelocityStats();
+  const pace = approvedSoFar / daysStudied; // topics/day
+  if (pace === 0) return null;
+  return Math.ceil(remaining / pace);
+}
+
+// ── Render subject card ──
+function renderConteudoCard(subj) {
+  const stats = getSubjectStats(subj.id);
+  const pct = stats.total > 0 ? Math.round((stats.approved / stats.total) * 100) : 0;
+  const nextT = getNextTopic(subj.id);
+
+  // Group topics by bloco
+  const blocos = {};
+  for (const t of subj.topicos) {
+    if (!blocos[t.bloco]) blocos[t.bloco] = [];
+    blocos[t.bloco].push(t);
+  }
+
+  const freqLabel = { must: '10/10', high: '7–9/10', med: '3–6/10' };
+  const freqClass = { must: 'f-must', high: 'f-high', med: 'f-med' };
+
+  let blocosHtml = '';
+  for (const [blocoName, topics] of Object.entries(blocos)) {
+    const topicsHtml = topics.map(t => {
+      const st = getCState(t.id);
+      const approved = st.read && st.exDone && st.exScore !== null && st.exScore >= t.minScore;
+      const failed = st.exDone && st.exScore !== null && st.exScore < t.minScore;
+      const isNext = nextT && nextT.id === t.id;
+
+      const statusDot = approved
+        ? `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;margin-top:3px"></span>`
+        : failed
+        ? `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0;margin-top:3px"></span>`
+        : isNext
+        ? `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--wood);flex-shrink:0;margin-top:3px;animation:npulse 1.4s infinite"></span>`
+        : `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;border:1.5px solid var(--border2);flex-shrink:0;margin-top:3px"></span>`;
+
+      const nextBadge = isNext ? `<span style="font-size:.48rem;background:rgba(122,92,15,.12);color:var(--wood);border:1px solid rgba(122,92,15,.25);padding:1px 5px;border-radius:1px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap">PRÓXIMO</span>` : '';
+
+      const scoreHtml = st.exScore !== null
+        ? `<span style="font-size:.5rem;color:${st.exScore >= t.minScore ? 'var(--green)' : 'var(--red)'}">${Math.round(st.exScore*100)}%</span>`
+        : '';
+
+      return `
+        <div class="ct" style="${approved ? 'opacity:.65' : ''}${isNext ? 'background:rgba(122,92,15,.04);border-radius:2px;padding:7px 4px;margin:-2px;' : ''}">
+          <span class="ct-num">${statusDot}</span>
+          <div class="ct-info">
+            <span class="ct-name">${t.nome} ${nextBadge}</span>
+            <span class="ct-detail">${t.livro} · ${t.cap} · ${t.ex} exercícios</span>
+            <span class="ct-detail" style="color:var(--ink4);font-style:italic">${t.detalhe}</span>
+          </div>
+          <span class="ct-freq ${freqClass[t.freq]}">${freqLabel[t.freq]}</span>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+            <button class="ct-done ${st.read ? 'checked' : ''}" onclick="toggleTopicRead('${t.id}')" title="Conteúdo lido">📖</button>
+            <button class="ct-done ${st.exDone && st.exScore !== null ? (st.exScore >= t.minScore ? 'checked' : '') : ''}"
+              onclick="markExercise('${t.id}')" title="Marcar exercícios" style="${failed ? 'background:var(--red);border-color:var(--red);color:#fff' : ''}">✏</button>
+            ${scoreHtml}
+          </div>
+        </div>`;
+    }).join('');
+
+    blocosHtml += `
+      <div class="cont-phase-title">${blocoName}</div>
+      <div class="cont-topics">${topicsHtml}</div>`;
+  }
+
+  return `
+    <div class="cont-subject" id="cs-${subj.id}">
+      <div class="cont-hdr" onclick="toggleConteudo('cb-${subj.id}')">
+        <div class="cont-hdr-dot" style="background:${subj.color}"></div>
+        <div class="cont-hdr-name" style="color:${subj.color}">${subj.name}</div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;margin-right:12px">
+          <div class="cont-progress-label" style="margin:0"><span style="color:var(--ink4)">${stats.approved}/${stats.total} aprovados</span><span style="color:${subj.color}">${pct}%</span></div>
+          <div class="cont-progress" style="width:120px;margin:0"><div class="cont-progress-fill" style="width:${pct}%;background:${subj.color}"></div></div>
+        </div>
+        <div class="cont-hdr-meta">${subj.q}/prova</div>
+        <span style="color:var(--ink4);font-size:.75rem;margin-left:4px">▼</span>
+      </div>
+      <div class="cont-body" id="cb-${subj.id}">
+        <div style="background:var(--bg3);border:1px solid var(--border);border-left:3px solid ${subj.color};padding:8px 12px;margin-bottom:12px;font-size:.6rem;color:var(--ink3)">
+          📖 = marcar conteúdo como lido · ✏ = marcar exercícios (serão solicitados via NotebookLM/Gemini) · Verde = aprovado ≥80% · Vermelho = reprovado, refazer · 🟡 PRÓXIMO = próximo a estudar
+        </div>
+        ${blocosHtml}
+      </div>
+    </div>`;
+}
+
+function renderConteudo() {
+  const list = document.getElementById('conteudo-list');
+  if (!list) return;
+  list.innerHTML = CONTEUDO_DATA.map(renderConteudoCard).join('');
+  updateConteudoCountdown();
+}
+
+function toggleConteudo(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('op');
+}
+
+function toggleTopicRead(tid) {
+  const st = getCState(tid);
+  st.read = !st.read;
+  saveConteudoState();
+  renderConteudo();
+}
+
+function markExercise(tid) {
+  const t = findTopic(tid);
+  if (!t) return;
+  const scoreStr = prompt(
+    `${t.nome}\n\n` +
+    `Livro: ${t.livro} · ${t.cap}\n` +
+    `Exercícios: ${t.ex} questões\n\n` +
+    `Digite sua pontuação (ex: 8 de ${t.ex}):\n` +
+    `(Meta: ≥80% = ${Math.ceil(t.ex * 0.8)} acertos de ${t.ex})\n\n` +
+    `Quantos acertou?`
+  );
+  if (scoreStr === null || scoreStr.trim() === '') return;
+  const correct = parseInt(scoreStr);
+  if (isNaN(correct) || correct < 0 || correct > t.ex) {
+    alert('Número inválido. Digite apenas a quantidade de acertos.');
+    return;
+  }
+  const score = correct / t.ex;
+  const st = getCState(tid);
+  st.exDone = true;
+  st.exScore = score;
+  if (score >= t.minScore) {
+    const pct = Math.round(score * 100);
+    alert(`✓ Aprovado! ${correct}/${t.ex} = ${pct}%\n\nPróximo tópico será desbloqueado automaticamente.`);
+  } else {
+    const needed = Math.ceil(t.ex * t.minScore);
+    alert(`✗ Abaixo de 80%. ${correct}/${t.ex} = ${Math.round(score*100)}%\n\nPrecisa de ${needed} acertos. Revise no NotebookLM e tente novamente.`);
+  }
+  saveConteudoState();
+  renderConteudo();
+}
+
+function findTopic(tid) {
+  for (const subj of CONTEUDO_DATA) {
+    const t = subj.topicos.find(t => t.id === tid);
+    if (t) return t;
+  }
+  return null;
+}
+
+// ── Countdown de conclusão ──
+function updateConteudoCountdown() {
+  const el = document.getElementById('conteudo-eta');
+  if (!el) return;
+  const { totalTopics, approvedTopics, remaining } = getVelocityStats();
+  const pct = totalTopics > 0 ? Math.round((approvedTopics / totalTopics) * 100) : 0;
+
+  // Estimate: assume 1 topic per study day (conservative — ~45min/topic with exercises)
+  // As user marks topics, actual pace auto-calibrates
+  const startDate = new Date('2026-03-19');
+  const today = new Date();
+  const daysStudied = Math.max(1, Math.floor((today - startDate) / (1000*60*60*24)));
+  const pace = approvedTopics > 0 ? approvedTopics / daysStudied : 0.8; // default: ~0.8 topic/day
+  const daysNeeded = pace > 0 ? Math.ceil(remaining / pace) : Math.ceil(remaining / 0.8);
+  const finishDate = new Date(today.getTime() + daysNeeded * 24 * 60 * 60 * 1000);
+  const fuvestDate = new Date('2026-11-22');
+  const daysToFuvest = Math.ceil((fuvestDate - today) / (1000*60*60*24));
+  const buffer = daysToFuvest - daysNeeded;
+
+  el.innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:12px">
+      <div style="background:var(--bg2);border:1px solid var(--border);padding:12px 14px;border-radius:2px">
+        <div style="font-family:'DM Serif Display',serif;font-size:1.6rem;color:${subj ? subj.color : 'var(--wood)'}; color:var(--wood);line-height:1">${approvedTopics}</div>
+        <div style="font-size:.55rem;color:var(--ink4);letter-spacing:.1em;text-transform:uppercase;margin-top:2px">tópicos aprovados</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);padding:12px 14px;border-radius:2px">
+        <div style="font-family:'DM Serif Display',serif;font-size:1.6rem;color:var(--amber);line-height:1">${remaining}</div>
+        <div style="font-size:.55rem;color:var(--ink4);letter-spacing:.1em;text-transform:uppercase;margin-top:2px">tópicos restantes</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);padding:12px 14px;border-radius:2px">
+        <div style="font-family:'DM Serif Display',serif;font-size:1.6rem;color:${buffer >= 30 ? 'var(--green)' : buffer >= 0 ? 'var(--amber)' : 'var(--red)'};line-height:1">${daysNeeded}</div>
+        <div style="font-size:.55rem;color:var(--ink4);letter-spacing:.1em;text-transform:uppercase;margin-top:2px">dias estimados (${pace.toFixed(2)}/dia)</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);padding:12px 14px;border-radius:2px">
+        <div style="font-family:'DM Serif Display',serif;font-size:1.6rem;color:${buffer >= 30 ? 'var(--green)' : buffer >= 0 ? 'var(--amber)' : 'var(--red)'};line-height:1">${buffer >= 0 ? '+' : ''}${buffer}</div>
+        <div style="font-size:.55rem;color:var(--ink4);letter-spacing:.1em;text-transform:uppercase;margin-top:2px">dias de margem pra FUVEST</div>
+      </div>
+    </div>
+    <div style="background:var(--bg3);border:1px solid var(--border);border-left:3px solid ${buffer >= 30 ? 'var(--green)' : buffer >= 0 ? 'var(--amber)' : 'var(--red)'};padding:8px 12px;font-size:.62rem;color:var(--ink3)">
+      ${buffer >= 60
+        ? `✓ No prazo confortável. Previsão de conclusão: <strong>${finishDate.toLocaleDateString('pt-BR')}</strong> — ${buffer} dias de sobra para revisão.`
+        : buffer >= 0
+        ? `⚠ Prazo apertado. Conclusão estimada em <strong>${finishDate.toLocaleDateString('pt-BR')}</strong> com ${buffer} dias de buffer. Aumentar ritmo para 1,2 tópicos/dia.`
+        : `✗ Ritmo atual insuficiente. Com o pace atual, o conteúdo seria concluído em <strong>${finishDate.toLocaleDateString('pt-BR')}</strong> — ${Math.abs(buffer)} dias depois da FUVEST. Precisa de ${(remaining/daysToFuvest).toFixed(2)} tópicos/dia.`
+      }
+    </div>
+    <div style="margin-top:10px;font-size:.58rem;color:var(--ink4)">
+      Progresso geral: ${pct}% (${approvedTopics}/${totalTopics} tópicos) · Velocidade real: ${approvedTopics > 0 ? pace.toFixed(2) : 'sem dados ainda'} tópicos/dia · Estimativa baseia-se nos tópicos que você marcou como aprovados (≥80%).
+    </div>`;
+}
+
+
+// ════════════════════════════════════════════════════════
+// CADERNO — FME IEZZI (7 volumes completos)
+// ════════════════════════════════════════════════════════
+
+const CADERNO_DATA = [
+  {
+    vol: 1, tema: 'Conjuntos & Funções',
+    cor: '#2563eb',
+    pdfUrl: 'https://luanmachado3501.github.io/luan-study-os/viewer/?file=pdfs/fme_vol_1.pdf',
+    caps: [
+      { cap: 'I', nome: 'Noções de Lógica', secs: [
+        { nome: 'Proposição', pg: 1 },
+        { nome: 'Negação', pg: 2 },
+        { nome: 'Proposição composta — Conectivos', pg: 3 },
+        { nome: 'Condicionais', pg: 6 },
+        { nome: 'Tautologias', pg: 9 },
+        { nome: 'Proposições logicamente falsas', pg: 10 },
+        { nome: 'Relação de implicação e equivalência', pg: 11 },
+        { nome: 'Sentenças abertas, quantificadores', pg: 12 },
+        { nome: 'Como negar proposições', pg: 15 },
+      ]},
+      { cap: 'II', nome: 'Conjuntos', secs: [
+        { nome: 'Elemento — Pertinência', pg: 18 },
+        { nome: 'Descrição de um conjunto', pg: 20 },
+        { nome: 'Conjunto unitário — Conjunto vazio', pg: 21 },
+        { nome: 'Conjunto universo', pg: 22 },
+        { nome: 'Conjuntos iguais', pg: 24 },
+        { nome: 'Subconjuntos', pg: 25 },
+        { nome: 'Reunião de conjuntos', pg: 28 },
+        { nome: 'Interseção de conjuntos', pg: 29 },
+        { nome: 'Propriedades', pg: 30 },
+        { nome: 'Diferença de conjuntos', pg: 33 },
+        { nome: 'Complementar de B em A', pg: 33 },
+      ]},
+      { cap: 'III', nome: 'Conjuntos Numéricos', secs: [
+        { nome: 'Conjunto dos números naturais', pg: 40, ex: true },
+        { nome: 'Conjunto dos números inteiros', pg: 41, ex: true },
+        { nome: 'Conjunto dos números racionais', pg: 44, ex: true },
+        { nome: 'Conjunto dos números reais', pg: 49, ex: true },
+        { nome: 'Intervalos', pg: 53, ex: true },
+        { nome: 'Conjunto dos números complexos', pg: 56, ex: true },
+      ]},
+      { cap: 'IV', nome: 'Relações', secs: [
+        { nome: 'Par ordenado', pg: 64 },
+        { nome: 'Representação gráfica', pg: 65 },
+        { nome: 'Produto cartesiano', pg: 67 },
+        { nome: 'Relação binária', pg: 71 },
+        { nome: 'Domínio e imagem', pg: 74 },
+        { nome: 'Relação inversa', pg: 76 },
+        { nome: 'Propriedades das relações', pg: 78 },
+      ]},
+      { cap: 'V', nome: 'Introdução às Funções', secs: [
+        { nome: 'Conceito de função', pg: 79, ex: true },
+        { nome: 'Definição de função', pg: 81, ex: true },
+        { nome: 'Notação das funções', pg: 84, ex: true },
+        { nome: 'Domínio e imagem', pg: 88, ex: true },
+        { nome: 'Funções iguais', pg: 93, ex: true },
+      ]},
+      { cap: 'VI', nome: 'Função Afim', secs: [
+        { nome: 'Função constante e identidade', pg: 97, ex: true },
+        { nome: 'Função linear', pg: 98, ex: true },
+        { nome: 'Função afim — definição', pg: 100, ex: true },
+        { nome: 'Gráfico', pg: 100, ex: true },
+        { nome: 'Imagem', pg: 105, ex: true },
+        { nome: 'Coeficientes da função afim', pg: 106, ex: true },
+        { nome: 'Zero da função afim', pg: 108, ex: true },
+        { nome: 'Funções crescentes e decrescentes', pg: 110, ex: true },
+        { nome: 'Sinal da função afim', pg: 116, ex: true },
+        { nome: 'Inequações', pg: 121, ex: true },
+        { nome: 'Inequações simultâneas', pg: 126, ex: true },
+      ]},
+      { cap: 'VII', nome: 'Função Quadrática', secs: [
+        { nome: 'Definição e gráfico', pg: 137, ex: true },
+        { nome: 'Concavidade e forma canônica', pg: 139, ex: true },
+        { nome: 'Zeros', pg: 140, ex: true },
+        { nome: 'Máximo e mínimo', pg: 145, ex: true },
+        { nome: 'Vértice da parábola', pg: 147, ex: true },
+        { nome: 'Imagem', pg: 149, ex: true },
+        { nome: 'Sinal da função quadrática', pg: 159, ex: true },
+        { nome: 'Inequação do 2º grau', pg: 164, ex: true },
+      ]},
+      { cap: 'VIII', nome: 'Função Modular', secs: [
+        { nome: 'Função definida por várias sentenças', pg: 184 },
+        { nome: 'Módulo', pg: 187, ex: true },
+        { nome: 'Função modular', pg: 188, ex: true },
+        { nome: 'Equações modulares', pg: 195, ex: true },
+        { nome: 'Inequações modulares', pg: 199, ex: true },
+      ]},
+      { cap: 'IX', nome: 'Outras Funções Elementares', secs: [
+        { nome: 'Função f(x) = xⁿ', pg: 205 },
+        { nome: 'Função recíproca', pg: 206 },
+        { nome: 'Função máximo inteiro', pg: 210 },
+      ]},
+      { cap: 'X', nome: 'Função Composta e Inversa', secs: [
+        { nome: 'Função composta', pg: 212, ex: true },
+        { nome: 'Função sobrejetora', pg: 220 },
+        { nome: 'Função injetora', pg: 221 },
+        { nome: 'Função bijetora', pg: 222 },
+        { nome: 'Função inversa', pg: 232, ex: true },
+      ]},
+    ]
+  },
+  {
+    vol: 2, tema: 'Logaritmos',
+    cor: '#6d28d9',
+    pdfUrl: 'https://luanmachado3501.github.io/luan-study-os/viewer/?file=pdfs/fme_vol_2.pdf',
+    caps: [
+      { cap: 'I', nome: 'Potências e Raízes', secs: [
+        { nome: 'Potência de expoente natural', pg: 1, ex: true },
+        { nome: 'Potência de expoente inteiro negativo', pg: 6, ex: true },
+        { nome: 'Raiz enésima aritmética', pg: 9, ex: true },
+        { nome: 'Potência de expoente racional', pg: 17, ex: true },
+        { nome: 'Potência de expoente irracional e real', pg: 21, ex: true },
+      ]},
+      { cap: 'II', nome: 'Função Exponencial', secs: [
+        { nome: 'Definição e propriedades', pg: 27, ex: true },
+        { nome: 'Imagem e gráfico', pg: 33, ex: true },
+        { nome: 'Equações exponenciais', pg: 39, ex: true },
+        { nome: 'Inequações exponenciais', pg: 48, ex: true },
+      ]},
+      { cap: 'III', nome: 'Logaritmos', secs: [
+        { nome: 'Conceito de logaritmo', pg: 57, ex: true },
+        { nome: 'Antilogaritmo', pg: 58 },
+        { nome: 'Consequências da definição', pg: 60, ex: true },
+        { nome: 'Sistemas de logaritmos', pg: 62 },
+        { nome: 'Propriedades dos logaritmos', pg: 63, ex: true },
+        { nome: 'Mudança de base', pg: 72, ex: true },
+      ]},
+      { cap: 'IV', nome: 'Função Logarítmica', secs: [
+        { nome: 'Definição, propriedades, imagem, gráfico', pg: 80, ex: true },
+      ]},
+      { cap: 'V', nome: 'Equações Exponenciais e Logarítmicas', secs: [
+        { nome: 'Equações exponenciais', pg: 88, ex: true },
+        { nome: 'Equações logarítmicas', pg: 91, ex: true },
+      ]},
+      { cap: 'VI', nome: 'Inequações Exponenciais e Logarítmicas', secs: [
+        { nome: 'Inequações exponenciais', pg: 112, ex: true },
+        { nome: 'Inequações logarítmicas', pg: 115, ex: true },
+      ]},
+      { cap: 'VII', nome: 'Logaritmos Decimais', secs: [
+        { nome: 'Introdução e característica', pg: 130 },
+        { nome: 'Mantissa e exemplos', pg: 133 },
+      ]},
+    ]
+  },
+  {
+    vol: 3, tema: 'Trigonometria',
+    cor: '#c2410c',
+    pdfUrl: 'https://luanmachado3501.github.io/luan-study-os/viewer/?file=pdfs/fme_vol_3.pdf',
+    caps: [
+      { cap: 'I', nome: 'Revisão de Geometria', secs: [
+        { nome: 'Revisão inicial de geometria plana', pg: 2, ex: true },
+      ]},
+      { cap: 'II', nome: 'Razões Trigonométricas no Triângulo Retângulo', secs: [
+        { nome: 'Seno, cosseno, tangente — Pitágoras', pg: 10, ex: true },
+        { nome: 'Razões trigonométricas especiais', pg: 16, ex: true },
+      ]},
+      { cap: 'III', nome: 'Arcos e Ângulos', secs: [
+        { nome: 'Arcos de circunferência e medidas', pg: 24, ex: true },
+        { nome: 'Ciclo trigonométrico', pg: 33, ex: true },
+      ]},
+      { cap: 'IV', nome: 'Razões Trigonométricas na Circunferência', secs: [
+        { nome: 'Seno, cosseno, tangente, cotangente', pg: 39, ex: true },
+        { nome: 'Secante e cossecante', pg: 57, ex: true },
+      ]},
+      { cap: 'V', nome: 'Relações Fundamentais', secs: [
+        { nome: 'Relações fundamentais', pg: 61, ex: true },
+      ]},
+      { cap: 'VI', nome: 'Arcos Notáveis', secs: [
+        { nome: 'Teorema e aplicações', pg: 72, ex: true },
+      ]},
+      { cap: 'VII', nome: 'Redução ao 1º Quadrante', secs: [
+        { nome: 'Redução do 2º, 3º e 4º quadrante', pg: 79, ex: true },
+      ]},
+      { cap: 'VIII', nome: 'Funções Circulares', secs: [
+        { nome: 'Função seno e cosseno', pg: 93, ex: true },
+        { nome: 'Função tangente e cotangente', pg: 106, ex: true },
+        { nome: 'Funções pares e ímpares', pg: 116 },
+      ]},
+      { cap: 'IX', nome: 'Transformações', secs: [
+        { nome: 'Fórmulas de adição e multiplicação', pg: 119, ex: true },
+        { nome: 'Fórmulas de divisão', pg: 131, ex: true },
+      ]},
+      { cap: 'X', nome: 'Identidades', secs: [
+        { nome: 'Demonstração e identidades no ciclo', pg: 147, ex: true },
+      ]},
+      { cap: 'XI', nome: 'Equações Trigonométricas', secs: [
+        { nome: 'Equações fundamentais e resolução', pg: 159, ex: true },
+      ]},
+      { cap: 'XII', nome: 'Inequações Trigonométricas', secs: [
+        { nome: 'Inequações fundamentais', pg: 182, ex: true },
+      ]},
+      { cap: 'XIII', nome: 'Funções Circulares Inversas', secs: [
+        { nome: 'Arco-seno, arco-cosseno, arco-tangente', pg: 197, ex: true },
+      ]},
+      { cap: 'Apêndice B', nome: 'Trigonometria em Triângulos Quaisquer', secs: [
+        { nome: 'Lei dos cossenos e lei dos senos', pg: 226, ex: true },
+      ]},
+    ]
+  },
+  {
+    vol: 4, tema: 'Sequências, Matrizes, Determinantes e Sistemas',
+    cor: '#065f46',
+    pdfUrl: 'https://luanmachado3501.github.io/luan-study-os/viewer/?file=pdfs/fme_vol_4.pdf',
+    caps: [
+      { cap: 'I', nome: 'Sequências', secs: [
+        { nome: 'Noções iniciais e lei de formação', pg: 1, ex: true },
+      ]},
+      { cap: 'II', nome: 'Progressão Aritmética', secs: [
+        { nome: 'Definição, classificação, fórmula do termo geral', pg: 6, ex: true },
+        { nome: 'Interpolação aritmética e soma', pg: 14, ex: true },
+      ]},
+      { cap: 'III', nome: 'Progressão Geométrica', secs: [
+        { nome: 'Definição, classificação, fórmula do termo geral', pg: 24, ex: true },
+        { nome: 'Produto, soma e PG infinita', pg: 32, ex: true },
+      ]},
+      { cap: 'IV', nome: 'Matrizes', secs: [
+        { nome: 'Noção de matriz e tipos especiais', pg: 45, ex: true },
+        { nome: 'Adição e produto por escalar', pg: 50, ex: true },
+        { nome: 'Produto de matrizes', pg: 57, ex: true },
+        { nome: 'Matrizes inversíveis', pg: 73, ex: true },
+      ]},
+      { cap: 'V', nome: 'Determinantes', secs: [
+        { nome: 'Definição e cálculo (n≤3)', pg: 82, ex: true },
+        { nome: 'Teorema de Laplace e propriedades', pg: 91, ex: true },
+      ]},
+      { cap: 'VI', nome: 'Sistemas Lineares', secs: [
+        { nome: 'Introdução e Teorema de Cramer', pg: 135, ex: true },
+        { nome: 'Sistemas escalonados e equivalentes', pg: 149, ex: true },
+        { nome: 'Sistema homogêneo e Rouché-Capelli', pg: 174, ex: true },
+      ]},
+    ]
+  },
+  {
+    vol: 5, tema: 'Combinatória & Probabilidade',
+    cor: '#92400e',
+    pdfUrl: 'https://luanmachado3501.github.io/luan-study-os/viewer/?file=pdfs/fme_vol_5.pdf',
+    caps: [
+      { cap: 'I', nome: 'Análise Combinatória', secs: [
+        { nome: 'Princípio fundamental da contagem', pg: 2, ex: true },
+        { nome: 'Arranjos com e sem repetição', pg: 15, ex: true },
+        { nome: 'Permutações', pg: 18, ex: true },
+        { nome: 'Fatorial', pg: 19, ex: true },
+        { nome: 'Combinações', pg: 33, ex: true },
+        { nome: 'Permutações com elementos repetidos', pg: 44, ex: true },
+      ]},
+      { cap: 'II', nome: 'Binômio de Newton', secs: [
+        { nome: 'Teorema binomial', pg: 61, ex: true },
+        { nome: 'Triângulo de Pascal', pg: 70, ex: true },
+        { nome: 'Expansão multinomial', pg: 80, ex: true },
+      ]},
+      { cap: 'III', nome: 'Probabilidade', secs: [
+        { nome: 'Experimentos aleatórios e espaço amostral', pg: 89, ex: true },
+        { nome: 'Evento e combinações de eventos', pg: 92, ex: true },
+        { nome: 'Definição e frequência relativa', pg: 96, ex: true },
+        { nome: 'Espaços equiprováveis', pg: 106, ex: true },
+        { nome: 'Probabilidade condicional', pg: 118, ex: true },
+        { nome: 'Teorema da multiplicação e adição', pg: 123, ex: true },
+        { nome: 'Independência de eventos', pg: 133, ex: true },
+        { nome: 'Lei binomial da probabilidade', pg: 139, ex: true },
+      ]},
+    ]
+  },
+  {
+    vol: 6, tema: 'Complexos, Polinômios & Equações',
+    cor: '#9d174d',
+    pdfUrl: 'https://luanmachado3501.github.io/luan-study-os/viewer/?file=pdfs/fme_vol_6.pdf',
+    caps: [
+      { cap: 'I', nome: 'Números Complexos', secs: [
+        { nome: 'Operações com pares ordenados', pg: 1, ex: true },
+        { nome: 'Forma algébrica', pg: 6, ex: true },
+        { nome: 'Forma trigonométrica', pg: 17, ex: true },
+        { nome: 'Potenciação e radiciação', pg: 32, ex: true },
+        { nome: 'Equações binômias e trinômias', pg: 46, ex: true },
+      ]},
+      { cap: 'II', nome: 'Polinômios', secs: [
+        { nome: 'Definição, igualdade, operações', pg: 53, ex: true },
+        { nome: 'Grau e divisão', pg: 65, ex: true },
+        { nome: 'Divisão por binômios do 1º grau', pg: 80, ex: true },
+      ]},
+      { cap: 'III', nome: 'Equações Polinomiais', secs: [
+        { nome: 'Definições e número de raízes', pg: 100, ex: true },
+        { nome: 'Multiplicidade de uma raiz', pg: 111, ex: true },
+        { nome: 'Relações de Girard', pg: 114, ex: true },
+        { nome: 'Raízes complexas e reais', pg: 128, ex: true },
+        { nome: 'Raízes racionais', pg: 140, ex: true },
+      ]},
+      { cap: 'IV', nome: 'Transformações e Equações Recíprocas', secs: [
+        { nome: 'Transformações e equações recíprocas', pg: 148, ex: true },
+      ]},
+      { cap: 'V', nome: 'Raízes Múltiplas e Comuns', secs: [
+        { nome: 'Derivada polinomial, raízes múltiplas', pg: 171, ex: true },
+        { nome: 'MDC e MMC de polinômios', pg: 182, ex: true },
+      ]},
+    ]
+  },
+  {
+    vol: 7, tema: 'Geometria Analítica',
+    cor: '#0c4a6e',
+    pdfUrl: 'https://luanmachado3501.github.io/luan-study-os/viewer/?file=pdfs/fme_vol_7.pdf',
+    caps: [
+      { cap: 'I', nome: 'Coordenadas Cartesianas no Plano', secs: [
+        { nome: 'Noções básicas e posição de ponto', pg: 1, ex: true },
+        { nome: 'Distância entre dois pontos', pg: 6, ex: true },
+        { nome: 'Razão entre segmentos colineares', pg: 10, ex: true },
+        { nome: 'Coordenadas do terceiro ponto', pg: 13, ex: true },
+        { nome: 'Condição para alinhamento', pg: 20, ex: true },
+      ]},
+      { cap: 'II', nome: 'Equação da Reta', secs: [
+        { nome: 'Equação geral e interseção', pg: 28, ex: true },
+        { nome: 'Posições relativas de duas retas', pg: 39, ex: true },
+        { nome: 'Feixe de retas concorrentes e paralelas', pg: 44, ex: true },
+        { nome: 'Formas da equação da reta', pg: 52, ex: true },
+      ]},
+      { cap: 'III', nome: 'Teoria Angular', secs: [
+        { nome: 'Coeficiente angular e cálculo de m', pg: 60, ex: true },
+        { nome: 'Paralelismo e perpendicularismo', pg: 67, ex: true },
+        { nome: 'Ângulo de duas retas', pg: 81, ex: true },
+      ]},
+      { cap: 'IV', nome: 'Distância de Ponto à Reta', secs: [
+        { nome: 'Distância entre ponto e reta', pg: 91, ex: true },
+        { nome: 'Área do triângulo', pg: 96, ex: true },
+      ]},
+      { cap: 'V', nome: 'Circunferências', secs: [
+        { nome: 'Equação reduzida e normal', pg: 118, ex: true },
+        { nome: 'Ponto e circunferência', pg: 126, ex: true },
+        { nome: 'Reta e circunferência', pg: 133, ex: true },
+        { nome: 'Duas circunferências', pg: 140, ex: true },
+      ]},
+      { cap: 'VI', nome: 'Problemas sobre Circunferências', secs: [
+        { nome: 'Tangência e determinação de circunferências', pg: 146, ex: true },
+      ]},
+      { cap: 'VII', nome: 'Cônicas', secs: [
+        { nome: 'Elipse', pg: 168, ex: true },
+        { nome: 'Hipérbole', pg: 174, ex: true },
+        { nome: 'Parábola', pg: 178, ex: true },
+        { nome: 'Reconhecimento e interseção de cônicas', pg: 183, ex: true },
+      ]},
+      { cap: 'VIII', nome: 'Lugares Geométricos', secs: [
+        { nome: 'Equação de lugar geométrico', pg: 198, ex: true },
+      ]},
+    ]
+  },
+];
+
+// ── State ──
+let cadernoState = {};
+
+function getCadState(id) {
+  if (!cadernoState[id]) cadernoState[id] = { read: false, score: null };
+  return cadernoState[id];
+}
+function saveCadState() {
+  try { localStorage.setItem('studyos_caderno', JSON.stringify(cadernoState)); } catch(e) {}
+}
+function loadCadState() {
+  try {
+    const s = localStorage.getItem('studyos_caderno');
+    if (s) cadernoState = JSON.parse(s);
+  } catch(e) {}
+}
+
+function cadSecId(vi, ci, si) { return `cad-${vi}-${ci}-${si}`; }
+
+function getCadVolStats(vi) {
+  let total = 0, done = 0;
+  const vol = CADERNO_DATA[vi];
+  vol.caps.forEach((cap, ci) => {
+    cap.secs.forEach((sec, si) => {
+      total++;
+      if (getCadState(cadSecId(vi, ci, si)).read) done++;
+    });
+  });
+  return { total, done, pct: total ? Math.round(done/total*100) : 0 };
+}
+
+function getCadTotals() {
+  let total = 0, done = 0, exTotal = 0, exDone = 0;
+  CADERNO_DATA.forEach((vol, vi) => {
+    vol.caps.forEach((cap, ci) => {
+      cap.secs.forEach((sec, si) => {
+        total++;
+        const st = getCadState(cadSecId(vi, ci, si));
+        if (st.read) done++;
+        if (sec.ex) { exTotal++; if (st.score !== null) exDone++; }
+      });
+    });
+  });
+  return { total, done, exTotal, exDone };
+}
+
+function toggleCadRead(vi, ci, si) {
+  const id = cadSecId(vi, ci, si);
+  const st = getCadState(id);
+  st.read = !st.read;
+  saveCadState();
+  renderCaderno();
+}
+
+function markCadScore(vi, ci, si) {
+  const sec = CADERNO_DATA[vi].caps[ci].secs[si];
+  const id = cadSecId(vi, ci, si);
+  const s = prompt(`Score em "${sec.nome}"\n\nDigite sua pontuação nos exercícios (ex: 8/10):`);
+  if (!s) return;
+  const parts = s.split('/');
+  const correct = parseInt(parts[0]);
+  const total = parseInt(parts[1]) || 10;
+  if (isNaN(correct)) return;
+  const pct = Math.round(correct/total*100);
+  getCadState(id).score = pct;
+  saveCadState();
+  renderCaderno();
+}
+
+function buildPdfLink(url, pg, nome) {
+  if (!url) return `<span style="font-size:.5rem;color:var(--ink4)">—</span>`;
+  const title = encodeURIComponent(nome || '');
+  const fullUrl = url + '&page=' + pg + '&title=' + title;
+  const n = (nome||'').replace(/'/g,"\\'");
+  return `<button class="cad-sec-link" onclick="openPdf('${fullUrl}',${pg},'${n}')">↗ p.${pg}</button>`;
+}
+
+function openPdf(url, pg, nome) {
+  // Abre o viewer do GitHub Pages numa nova aba na página exata
+  window.open(url, '_blank', 'noopener');
+}
+
+function closePdfModal() {
+  document.getElementById('pdf-modal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closePdfModal();
+});
+
+function renderCaderno() {
+  const list = document.getElementById('caderno-list');
+  const stats = document.getElementById('caderno-stats');
+  if (!list || !stats) return;
+
+  // Stats cards
+  const tot = getCadTotals();
+  const pctGeral = tot.total ? Math.round(tot.done/tot.total*100) : 0;
+  stats.innerHTML = `
+    <div class="cad-stat-card"><div class="cad-stat-v">${pctGeral}%</div><div class="cad-stat-l">Seções lidas</div></div>
+    <div class="cad-stat-card"><div class="cad-stat-v">${tot.done}/${tot.total}</div><div class="cad-stat-l">Concluídas</div></div>
+    <div class="cad-stat-card"><div class="cad-stat-v">${tot.exDone}/${tot.exTotal}</div><div class="cad-stat-l">Exercícios</div></div>
+    <div class="cad-stat-card"><div class="cad-stat-v">${7 - CADERNO_DATA.filter((_,vi)=>getCadVolStats(vi).pct===100).length}</div><div class="cad-stat-l">Vols restantes</div></div>
+  `;
+
+  // Volumes
+  list.innerHTML = CADERNO_DATA.map((vol, vi) => {
+    const vs = getCadVolStats(vi);
+    const capsHtml = vol.caps.map((cap, ci) => {
+      const secsHtml = cap.secs.map((sec, si) => {
+        const id = cadSecId(vi, ci, si);
+        const st = getCadState(id);
+        const scoreColor = st.score === null ? 'var(--ink4)' : st.score >= 80 ? 'var(--green)' : 'var(--red)';
+        const scoreLabel = st.score === null ? '—' : `${st.score}%`;
+        return `
+          <div class="cad-sec">
+            <div class="cad-chk ${st.read ? 'done' : ''}" onclick="toggleCadRead(${vi},${ci},${si})">${st.read ? '✓' : ''}</div>
+            <div class="cad-sec-name">${sec.nome}</div>
+            <div class="cad-sec-pg">p.${sec.pg}</div>
+            ${sec.ex ? `<button class="cad-score-btn" onclick="markCadScore(${vi},${ci},${si})">✏ score</button><span class="cad-score-val" style="color:${scoreColor}">${scoreLabel}</span>` : '<span class="cad-score-val"></span><span style="width:52px"></span>'}
+            ${buildPdfLink(vol.pdfUrl, sec.pg, sec.nome)}
+          </div>`;
+      }).join('');
+      return `
+        <div class="cad-cap">
+          <div class="cad-cap-hdr" style="border-left-color:${vol.cor}" onclick="this.nextElementSibling.classList.toggle('open')">
+            <span class="cad-cap-name">Cap. ${cap.cap} — ${cap.nome}</span>
+            <span class="cad-cap-meta">${cap.secs.length} seções</span>
+            <span style="color:var(--ink4);font-size:.7rem;margin-left:8px">▼</span>
+          </div>
+          <div class="cad-cap-body">${secsHtml}</div>
+        </div>`;
+    }).join('');
+
+    return `
+      <div class="cad-vol">
+        <div class="cad-vol-hdr" onclick="document.getElementById('cvb-${vi}').classList.toggle('open')">
+          <div class="cad-vol-num" style="color:${vol.cor}">${vol.vol}</div>
+          <div class="cad-vol-title">
+            <div class="cad-vol-name">FME Vol. ${vol.vol} — ${vol.tema}</div>
+            <div class="cad-vol-sub">${vol.caps.length} capítulos · ${CADERNO_DATA[vi].caps.reduce((a,c)=>a+c.secs.length,0)} seções</div>
+          </div>
+          <div class="cad-vol-prog">
+            <div class="cad-vol-pct" style="color:${vol.cor}">${vs.pct}%</div>
+            <div class="cad-vol-bar"><div class="cad-vol-fill" style="width:${vs.pct}%;background:${vol.cor}"></div></div>
+            <div style="font-size:.5rem;color:var(--ink4);margin-top:2px">${vs.done}/${vs.total} seções</div>
+          </div>
+        </div>
+        <div class="cad-vol-body" id="cvb-${vi}">${capsHtml}</div>
+      </div>`;
+  }).join('');
+}
+
+// ════════════ INIT ════════════
+renderWeek();
+renderMats();
+renderTreino();
+renderIngs();
+ckDisp();
+updateWater();
+loadConteudoState();
+renderConteudo();
+loadCadState();
+renderCaderno();
+</script>
+</body>
+</html>
