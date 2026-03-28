@@ -10,6 +10,7 @@ body{background:#1a1714;display:flex;flex-direction:column;height:100vh;font-fam
 #toolbar{background:#2a2420;border-bottom:1px solid #3d3830;padding:6px 14px;display:flex;align-items:center;gap:12px;flex-shrink:0}
 #vol-info{color:#9a7515;font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;flex:1}
 #pg-info{color:#6b6258;font-size:.58rem}
+#status{color:#6b6258;font-size:.58rem}
 #close-btn{font-size:.58rem;color:#9c9186;background:transparent;border:1px solid #3d3830;padding:2px 8px;border-radius:2px;cursor:pointer;font-family:monospace}
 #close-btn:hover{border-color:#9a7515;color:#9a7515}
 #frame{flex:1;border:none;width:100%}
@@ -19,6 +20,7 @@ body{background:#1a1714;display:flex;flex-direction:column;height:100vh;font-fam
 <div id="toolbar">
   <div id="vol-info">FME Iezzi</div>
   <div id="pg-info"></div>
+  <div id="status">carregando...</div>
   <button id="close-btn" onclick="window.close()">✕ fechar</button>
 </div>
 <iframe id="frame"></iframe>
@@ -27,11 +29,30 @@ const p = new URLSearchParams(location.search);
 const file = p.get('file');
 const page = parseInt(p.get('page')||'1');
 const title = p.get('title')||'';
+
 if(title) document.getElementById('vol-info').textContent = decodeURIComponent(title);
 document.getElementById('pg-info').textContent = 'p. '+page;
 document.title = title ? decodeURIComponent(title) : 'FME Viewer';
+
 if(file){
-  document.getElementById('frame').src = '../' + file + '#page=' + page;
+  const url = '../' + file;
+  fetch(url)
+    .then(r => {
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      return r.blob();
+    })
+    .then(blob => {
+      const blobUrl = URL.createObjectURL(blob) + '#page=' + page;
+      document.getElementById('frame').src = blobUrl;
+      document.getElementById('status').textContent = '';
+    })
+    .catch(err => {
+      document.getElementById('status').textContent = 'erro: '+err.message;
+      // fallback: tenta abrir direto
+      document.getElementById('frame').src = url + '#page=' + page;
+    });
+}else{
+  document.getElementById('status').textContent = 'nenhum arquivo';
 }
 </script>
 </body>
