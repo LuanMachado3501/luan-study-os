@@ -1,37 +1,44 @@
 [
   {
     "vol": 1,
-    "tema": "Conjuntos & Funções",
-    "file": "pdfs/fme_vol_1.pdf"
+    "tema": "Conjuntos & FunÃ§Ãµes",
+    "file": "pdfs/fme_vol_1.pdf",
+    "page_offset": 8
   },
   {
     "vol": 2,
     "tema": "Logaritmos",
-    "file": "pdfs/fme_vol_2.pdf"
+    "file": "pdfs/fme_vol_2.pdf",
+    "page_offset": 8
   },
   {
     "vol": 3,
     "tema": "Trigonometria",
-    "file": "pdfs/fme_vol_3.pdf"
+    "file": "pdfs/fme_vol_3.pdf",
+    "page_offset": 8
   },
   {
     "vol": 4,
-    "tema": "Sequências, Matrizes, Determinantes e Sistemas",
-    "file": "pdfs/fme_vol_4.pdf"
+    "tema": "SequÃªncias, Matrizes, Determinantes e Sistemas",
+    "file": "pdfs/fme_vol_4.pdf",
+    "page_offset": 8
   },
   {
     "vol": 5,
-    "tema": "Combinatória & Probabilidade",
-    "file": "pdfs/fme_vol_5.pdf"
+    "tema": "CombinatÃ³ria & Probabilidade",
+    "file": "pdfs/fme_vol_5.pdf",
+    "page_offset": 6
   },
   {
     "vol": 6,
-    "tema": "Complexos, Polinômios & Equações",
-    "file": "pdfs/fme_vol_6.pdf"
+    "tema": "Complexos, PolinÃ´mios & EquaÃ§Ãµes",
+    "file": "pdfs/fme_vol_6.pdf",
+    "page_offset": 8
   },
   {
     "vol": 7,
-    "tema": "Geometria Analítica",
-    "file": "pdfs/fme_vol_7.pdf"
+    "tema": "Geometria AnalÃ­tica",
+    "file": "pdfs/fme_vol_7.pdf",
+    "page_offset": 8
   }
 ]
