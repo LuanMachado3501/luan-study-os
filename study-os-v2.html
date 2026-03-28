@@ -2800,15 +2800,17 @@ function buildPdfLink(url, pg, nome) {
 }
 
 function openPdf(url, pg, nome) {
-  // Abre o viewer do GitHub Pages numa nova aba na página exata
-  window.open(url, '_blank', 'noopener');
+  document.getElementById('pdf-modal-frame').src = url;
+  document.getElementById('pdf-modal-title').textContent = nome;
+  document.getElementById('pdf-modal-pg').textContent = 'p. ' + pg + ' · FME Iezzi';
+  document.getElementById('pdf-modal').style.display = 'block';
+  document.body.style.overflow = 'hidden';
 }
-
 function closePdfModal() {
   document.getElementById('pdf-modal').style.display = 'none';
+  document.getElementById('pdf-modal-frame').src = '';
   document.body.style.overflow = '';
 }
-
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') closePdfModal();
 });
@@ -2888,5 +2890,18 @@ renderConteudo();
 loadCadState();
 renderCaderno();
 </script>
+<div id="pdf-modal" style="display:none;position:fixed;inset:0;z-index:9998;background:rgba(26,23,20,.85);backdrop-filter:blur(4px)">
+  <div style="position:absolute;inset:20px;background:#f5f3ef;border:1px solid #ddd8ce;border-radius:3px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.4)">
+    <div style="padding:8px 14px;border-bottom:1px solid #ddd8ce;display:flex;align-items:center;gap:12px;background:#f0ede8;flex-shrink:0">
+      <div style="flex:1">
+        <div id="pdf-modal-title" style="font-size:.65rem;font-weight:600;color:#3d3830"></div>
+        <div id="pdf-modal-pg" style="font-size:.52rem;color:#9c9186;margin-top:1px"></div>
+      </div>
+      <span style="font-size:.5rem;color:#9c9186">ESC para fechar</span>
+      <button onclick="closePdfModal()" style="font-family:'DM Mono',monospace;font-size:.58rem;color:#6b6258;background:transparent;border:1px solid #ddd8ce;padding:3px 10px;border-radius:2px;cursor:pointer">✕</button>
+    </div>
+    <iframe id="pdf-modal-frame" src="" style="flex:1;border:none;width:100%;min-height:0"></iframe>
+  </div>
+</div>
 </body>
 </html>
