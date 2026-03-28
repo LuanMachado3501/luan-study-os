@@ -2801,34 +2801,34 @@ function buildPdfLink(url, pg, nome) {
 
 function openPdf(viewerUrl, pg, nome) {
   const PAGE_OFFSET = {1:8,2:8,3:8,4:8,5:6,6:8,7:8};
-  // extrai o caminho do PDF da URL do viewer (ex: pdfs/fme_vol_1.pdf)
   const file = new URL(viewerUrl).searchParams.get('file');
   const volMatch = file ? file.match(/fme_vol_(\d+)/) : null;
   const vol = volMatch ? parseInt(volMatch[1]) : null;
   const offset = (vol && PAGE_OFFSET[vol]) ? PAGE_OFFSET[vol] : 0;
   const pdfPage = pg + offset;
-  // URL absoluta do PDF a partir da página atual
   const base = location.href.replace(/\/[^\/]*$/, '/');
   const pdfUrl = base + file;
 
   document.getElementById('pdf-modal-title').textContent = nome;
-  document.getElementById('pdf-modal-pg').textContent = 'p. ' + pg + ' · FME Iezzi';
+  document.getElementById('pdf-modal-sub').textContent = 'p. ' + pg + ' · FME Iezzi · carregando...';
   document.getElementById('pdf-modal').style.display = 'block';
+  document.getElementById('pdf-pg-banner').style.display = 'none';
   document.body.style.overflow = 'hidden';
-  document.getElementById('pdf-modal-frame').src = '';
+  document.getElementById('pdf-frame').src = '';
 
   fetch(pdfUrl)
     .then(r => { if(!r.ok) throw new Error('HTTP '+r.status); return r.blob(); })
     .then(blob => {
-      document.getElementById('pdf-modal-frame').src = URL.createObjectURL(blob) + '#page=' + pdfPage;
+      document.getElementById('pdf-frame').src = URL.createObjectURL(blob) + '#page=' + pdfPage;
+      document.getElementById('pdf-modal-sub').textContent = 'p. ' + pg + ' · FME Iezzi';
     })
-    .catch(() => {
-      document.getElementById('pdf-modal-frame').src = pdfUrl + '#page=' + pdfPage;
+    .catch(err => {
+      document.getElementById('pdf-modal-sub').textContent = 'erro: ' + err.message;
     });
 }
 function closePdfModal() {
   document.getElementById('pdf-modal').style.display = 'none';
-  document.getElementById('pdf-modal-frame').src = '';
+  document.getElementById('pdf-frame').src = '';
   document.body.style.overflow = '';
 }
 document.addEventListener('keydown', function(e) {
@@ -2910,18 +2910,5 @@ renderConteudo();
 loadCadState();
 renderCaderno();
 </script>
-<div id="pdf-modal" style="display:none;position:fixed;inset:0;z-index:9998;background:rgba(26,23,20,.85);backdrop-filter:blur(4px)">
-  <div style="position:absolute;inset:20px;background:#f5f3ef;border:1px solid #ddd8ce;border-radius:3px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.4)">
-    <div style="padding:8px 14px;border-bottom:1px solid #ddd8ce;display:flex;align-items:center;gap:12px;background:#f0ede8;flex-shrink:0">
-      <div style="flex:1">
-        <div id="pdf-modal-title" style="font-size:.65rem;font-weight:600;color:#3d3830"></div>
-        <div id="pdf-modal-pg" style="font-size:.52rem;color:#9c9186;margin-top:1px"></div>
-      </div>
-      <span style="font-size:.5rem;color:#9c9186">ESC para fechar</span>
-      <button onclick="closePdfModal()" style="font-family:'DM Mono',monospace;font-size:.58rem;color:#6b6258;background:transparent;border:1px solid #ddd8ce;padding:3px 10px;border-radius:2px;cursor:pointer">✕</button>
-    </div>
-    <iframe id="pdf-modal-frame" src="" style="flex:1;border:none;width:100%;min-height:0"></iframe>
-  </div>
-</div>
 </body>
 </html>
